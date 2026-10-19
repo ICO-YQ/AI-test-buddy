@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>协作平台 · 界面原型 v3</title>
+<style>
+/* ═══════════ 设计令牌 ═══════════
+   参考 Linear / Jira 成熟工具规范：
+   · 强调色靛蓝 #5E6AD2（Linear 标志色）
+   · 中性灰阶 8 级，正文 #1A1A18
+   · 圆角 5–6px（小圆角，锐利感）
+   · 纯 1px 描边，不用阴影（浮层除外）
+   · 紧凑密度：正文 13px / 行高 1.5 / 卡片内边距 9–11px
+   · 状态用 7px 实心圆点，不用彩色徽章
+   · AI 能力融入既有交互，不做视觉主角
+*/
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F7F7F5;--panel:#FFFFFF;--panel-2:#FBFBFA;
+  --line:#E8E8E4;--line-2:#DFDFDA;--line-3:#D4D4CE;
+  --tx:#1A1A18;--tx-2:#6B6B66;--tx-3:#9A9A94;--tx-4:#B8B8B2;
+  --ac:#5E6AD2;--ac-w:#F0F0FC;--ac-b:#C5C5F0;
+  --st-1:#B8B8B2;--st-2:#8A8A84;--st-3:#E5A13A;--st-4:#5E6AD2;--st-5:#3FA97A;
+  --ok:#3FA97A;--warn:#D99A2B;--err:#D0574B;--info:#5E6AD2;
+  --r:5px;--r-2:6px;--r-3:8px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Inter","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--tx);font-size:13px;line-height:1.5;-webkit-font-smoothing:antialiased;letter-spacing:-.005em}
+button{font-family:inherit;color:inherit;font-size:inherit}
+input{font-family:inherit}
+::selection{background:var(--ac-b)}
+
+.shell{display:flex;height:100vh;overflow:hidden}
+
+/* ═══ 左侧导航 232px ═══ */
+.nav{width:232px;flex:none;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;overflow-y:auto}
+.nav::-webkit-scrollbar,.nb::-webkit-scrollbar,.cb::-webkit-scrollbar,.mb::-webkit-scrollbar,.db::-webkit-scrollbar,.cl::-webkit-scrollbar,.rlist::-webkit-scrollbar,.chatb::-webkit-scrollbar,.kb2::-webkit-scrollbar{width:8px;height:8px}
+.nav::-webkit-scrollbar-thumb,.nb::-webkit-scrollbar-thumb,.cb::-webkit-scrollbar-thumb,.mb::-webkit-scrollbar-thumb,.db::-webkit-scrollbar-thumb,.cl::-webkit-scrollbar-thumb,.rlist::-webkit-scrollbar-thumb,.chatb::-webkit-scrollbar-thumb,.kb2::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:4px;border:2px solid var(--panel)}
+.nav::-webkit-scrollbar-track{background:transparent}
+
+.ws{padding:10px;display:flex;align-items:center;gap:8px;padding-bottom:8px}
+.wsav{width:22px;height:22px;border-radius:var(--r);background:var(--tx);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:500;flex:none}
+.wsbtn{flex:1;display:flex;align-items:center;gap:6px;height:26px;padding:0 6px;border-radius:var(--r);cursor:pointer;font-weight:500;font-size:13px}
+.wsbtn:hover{background:var(--bg)}
+.wsbtn .cv{margin-left:auto;color:var(--tx-3);font-size:9px}
+
+.sbox{padding:0 10px 8px}
+.sbi{height:28px;border:1px solid var(--line);background:var(--panel-2);border-radius:var(--r);display:flex;align-items:center;gap:7px;padding:0 9px;font-size:12.5px;color:var(--tx-3);cursor:pointer}
+.sbi:hover{background:var(--bg);border-color:var(--line-2)}
+
+.nb{padding:6px 8px 10px}
+.ng{margin-bottom:2px}
+.ngt{font-size:11px;color:var(--tx-3);padding:6px 8px 3px;font-weight:500}
+.ni{display:flex;align-items:center;gap:9px;padding:5px 8px;border-radius:var(--r);font-size:13px;color:var(--tx-2);cursor:pointer;position:relative}
+.ni:hover{background:var(--bg)}
+.ni.on{background:#EFEFEC;color:var(--tx);font-weight:500}
+.ni.on::before{content:'';position:absolute;left:-8px;top:6px;bottom:6px;width:2px;background:var(--ac);border-radius:0 2px 2px 0}
+.nic{width:16px;flex:none;display:flex;align-items:center;justify-content:center;color:var(--tx-3);font-size:13px}
+.ni.on .nic{color:var(--tx-2)}
+.nlabel{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nct{font-size:11px;color:var(--tx-3);font-variant-numeric:tabular-nums}
+.ni.on .nct{color:var(--tx-2)}
+.na{width:16px;height:16px;border-radius:50%;font-size:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:500;flex:none;letter-spacing:0}
+
+/* ═══ 主区 ═══ */
+.main{flex:1;display:flex;flex-direction:column;min-width:0;background:var(--bg)}
+.topbar{height:44px;flex:none;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:0 14px}
+.crumb{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--tx-3)}
+.crumb b{color:var(--tx);font-weight:500}
+.vt{display:flex;gap:1px;background:var(--bg);padding:2px;border-radius:var(--r)}
+.vti{padding:4px 11px;border-radius:4px;font-size:12.5px;color:var(--tx-2);cursor:pointer}
+.vti:hover{color:var(--tx)}
+.vti.on{background:var(--panel);color:var(--tx);font-weight:500;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.tr{margin-left:auto;display:flex;align-items:center;gap:7px}
+.tb{height:28px;padding:0 10px;border:1px solid var(--line);background:var(--panel);border-radius:var(--r);font-size:12.5px;display:inline-flex;align-items:center;gap:5px;cursor:pointer;color:var(--tx-2)}
+.tb:hover{background:var(--bg);color:var(--tx)}
+.tb.pri{background:var(--tx);border-color:var(--tx);color:#fff}
+.tb.pri:hover{opacity:.87;color:#fff}
+.tb.sm{height:25px;padding:0 8px;font-size:12px}
+.tb.gh{border-color:transparent;background:transparent}
+.tb.gh:hover{background:var(--bg);border-color:transparent}
+.body{flex:1;overflow:hidden;min-height:0;display:flex;flex-direction:column}
+
+/* ═══ 看板 ═══ */
+.kw{flex:1;display:flex;min-height:0}
+.bd{flex:1;display:flex;overflow-x:auto;min-width:0;padding:12px 12px 0}
+.cl{flex:1;min-width:176px;display:flex;flex-direction:column;border-left:1px solid var(--line);min-height:0}
+.cl:first-child{border-left:0;padding-left:0}
+.cl:last-child{padding-right:0}
+.clh{padding:0 12px 9px;display:flex;align-items:center;gap:7px;flex:none;height:28px}
+.sd{width:7px;height:7px;border-radius:50%;flex:none}
+.clt{font-size:12.5px;font-weight:500;color:var(--tx)}
+.cln{font-size:12px;color:var(--tx-3);font-variant-numeric:tabular-nums}
+.cla{margin-left:auto;display:flex;gap:1px;opacity:0;transition:opacity .1s}
+.cl:hover .cla{opacity:1}
+.cla span{width:20px;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--tx-3);cursor:pointer}
+.cla span:hover{background:var(--bg);color:var(--tx)}
+.cb{flex:1;overflow-y:auto;padding:0 10px 16px;min-height:0}
+.cb:empty::after{content:'';display:block;padding:12px}
+
+/* 任务卡：紧凑，左侧优先级色条 */
+.tc{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-2);padding:9px 10px;margin-bottom:6px;cursor:pointer;position:relative}
+.tc:hover{border-color:var(--line-3);background:var(--panel-2)}
+.tc:before{content:'';position:absolute;left:0;top:7px;bottom:7px;width:2px;border-radius:0 2px 2px 0;background:var(--tx-4)}
+.tc.p1:before{background:var(--err)}
+.tc.p2:before{background:var(--warn)}
+.tc.p3:before{background:var(--st-1)}
+.tt{font-size:13px;line-height:1.45;margin-bottom:7px;color:var(--tx)}
+.tm{display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--tx-3)}
+.tid{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;color:var(--tx-3)}
+.tmeta{display:flex;align-items:center;gap:4px}
+.av{width:18px;height:18px;border-radius:50%;background:var(--st-2);color:#fff;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:500;flex:none}
+.av.sm{width:16px;height:16px;font-size:8px}
+.tm .av{margin-left:auto}
+.sub{font-size:11.5px;color:var(--tx-3);display:flex;align-items:center;gap:5px;margin-top:6px;padding-left:9px}
+.cadd{padding:0 10px 10px;flex:none}
+.cadb{width:100%;height:26px;border:1px dashed var(--line-2);background:transparent;border-radius:var(--r);font-size:12px;color:var(--tx-3);cursor:pointer}
+.cadb:hover{background:var(--panel);border-color:var(--line-3);color:var(--tx-2)}
+
+/* 右侧收件箱 */
+.rc{width:264px;flex:none;background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.rch{padding:0 14px;height:40px;display:flex;align-items:center;border-bottom:1px solid var(--line);flex:none;font-size:13px;font-weight:500}
+.rlist{flex:1;overflow-y:auto;padding:8px}
+.ri{border-radius:var(--r-2);padding:8px 9px;margin-bottom:4px;cursor:pointer;border:1px solid transparent}
+.ri:hover{background:var(--bg);border-color:var(--line)}
+.ri.od{background:#FDF7F0;border-color:#F0DFC8}
+.ri.od:hover{background:#FCF1E4;border-color:#EBD2B4}
+.rit{font-size:12.5px;line-height:1.45;margin-bottom:5px}
+
+/* ═══ 对话页（三栏式） ═══ */
+.chat{flex:1;display:flex;min-height:0;background:var(--panel)}
+.clist{width:216px;flex:none;border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.clh{padding:0 12px;height:44px;display:flex;align-items:center;border-bottom:1px solid var(--line);flex:none;font-size:13px;font-weight:500}
+.clb{flex:1;overflow-y:auto;padding:6px 6px 10px}
+.cse{padding:6px 8px;border-radius:var(--r);cursor:pointer;display:flex;gap:7px;align-items:flex-start}
+.cse:hover{background:var(--bg)}
+.cse.on{background:#EFEFEC}
+.cset{flex:1;min-width:0;font-size:12.5px;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--tx-2)}
+.cse.on .cset{color:var(--tx)}
+.cmain{flex:1;display:flex;flex-direction:column;min-width:0;min-height:0}
+.cmh{height:44px;flex:none;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:9px;padding:0 14px}
+.chatb{flex:1;overflow-y:auto;padding:20px 0;min-height:0}
+.ms{padding:0 22px;margin-bottom:18px;max-width:760px}
+.mh{display:flex;align-items:center;gap:7px;margin-bottom:6px;font-size:12px;color:var(--tx-3)}
+.mhn{color:var(--tx-2);font-weight:500}
+.mb2{font-size:13px;line-height:1.65}
+.mb2 p{margin-bottom:9px}.mb2 p:last-child{margin:0}
+.mb2 ul{margin:0 0 9px;padding-left:19px}.mb2 li{margin-bottom:3px}
+.qs{background:var(--panel-2);border:1px solid var(--line);border-radius:var(--r-2);padding:12px 14px}
+.qs b{font-weight:500}
+/* 工具调用：单行折叠，非大卡片 */
+.tl{display:flex;align-items:center;gap:7px;padding:4px 0;font-size:12px;color:var(--tx-3);cursor:pointer;border-radius:4px}
+.tl:hover{color:var(--tx-2)}
+.tlc{background:var(--panel-2);border:1px solid var(--line);border-left:2px solid var(--line-3);border-radius:var(--r);padding:8px 10px;margin:6px 0;font-size:11.5px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--tx-2);line-height:1.6;display:none}
+.tlc.on{display:block}
+.kv2{display:flex;font-size:12.5px;padding:3px 0;gap:12px}
+.kv2 .k{color:var(--tx-3);width:100px;flex:none;font-size:12px}
+.kv2 .v{flex:1;min-width:0;word-break:break-word}
+/* 引用块：Linear 风格左边线 */
+.cite{border-left:2px solid var(--ac-b);padding:2px 0 2px 10px;margin:7px 0;font-size:12.5px;color:var(--tx-2);cursor:pointer}
+.cite:hover{color:var(--tx);border-left-color:var(--ac)}
+.cite .vt{font-size:11.5px;color:var(--tx-3);margin-top:1px}
+.cmf{flex:none;border-top:1px solid var(--line);padding:12px 22px 16px}
+.cbox{border:1px solid var(--line-2);border-radius:var(--r-3);background:var(--panel);overflow:hidden}
+.cbox:focus-within{border-color:var(--ac-b);box-shadow:0 0 0 3px var(--ac-w)}
+.cinp{padding:11px 13px;font-size:13px;color:var(--tx-4);min-height:44px}
+.cbar{display:flex;align-items:center;gap:5px;padding:0 8px 8px;flex-wrap:wrap}
+.cbi{height:26px;padding:0 8px;border:1px solid transparent;background:transparent;border-radius:var(--r);font-size:12px;color:var(--tx-2);cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.cbi:hover{background:var(--bg);color:var(--tx)}
+/* 右侧上下文栏 */
+.cxt{width:252px;flex:none;border-left:1px solid var(--line);overflow-y:auto;min-height:0;background:var(--panel-2)}
+.xs{padding:12px 14px;border-bottom:1px solid var(--line)}
+.xst{font-size:11px;color:var(--tx-3);margin-bottom:8px;font-weight:500}
+.xrow{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:12.5px}
+.xrow .k{color:var(--tx-3);width:64px;flex:none;font-size:12px}
+
+/* 模型下拉 */
+.mdp{height:28px;padding:0 9px;border:1px solid var(--line);background:var(--panel);border-radius:var(--r);font-size:12.5px;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.mdp:hover{background:var(--bg)}
+.mnu{position:fixed;background:var(--panel);border:1px solid var(--line-2);border-radius:var(--r-3);box-shadow:0 4px 16px rgba(0,0,0,.1),0 0 0 1px rgba(0,0,0,.03);padding:4px;z-index:400;min-width:264px}
+.mi{padding:7px 9px;border-radius:var(--r);cursor:pointer;font-size:12.5px}
+.mi:hover{background:var(--bg)}
+.mi.on{background:var(--bg)}
+.mi .n{display:flex;align-items:center;gap:7px}
+.mi .d{font-size:11.5px;color:var(--tx-3);margin-top:1px;padding-left:20px}
+.msep{height:1px;background:var(--line);margin:4px 0}
+
+/* ═══ 通用页面 ═══ */
+.pg{display:none;flex:1;overflow-y:auto;min-height:0;padding:18px 22px 50px}
+.pg.on{display:block}
+.pt{font-size:16px;font-weight:600;letter-spacing:-.01em;margin-bottom:2px}
+.ps{font-size:13px;color:var(--tx-2);margin-bottom:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-3);padding:15px;margin-bottom:12px}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px}
+.ch h3{font-size:13.5px;font-weight:600}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.cl2{flex:1;min-width:260px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:left;padding:7px 9px;background:var(--panel-2);font-weight:500;font-size:11.5px;color:var(--tx-2);border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--panel-2)}
+.inp{height:30px;border:1px solid var(--line-2);border-radius:var(--r);padding:0 10px;background:var(--panel);display:flex;align-items:center;font-size:12.5px;color:var(--tx-4)}
+.sel{height:30px;border:1px solid var(--line-2);border-radius:var(--r);padding:0 10px;background:var(--panel);display:flex;align-items:center;justify-content:space-between;font-size:12.5px;cursor:pointer}
+.lbl{font-size:11.5px;color:var(--tx-2);margin-bottom:4px;display:block;font-weight:500}
+.fr{margin-bottom:11px}
+.bx{display:flex;align-items:center;gap:8px;padding:7px 9px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);margin-bottom:5px;font-size:12.5px}
+.bx.on{border-color:var(--ac-b);background:var(--ac-w)}
+.step{display:flex;align-items:center;gap:9px;padding:5px 0;font-size:12.5px}
+.sdot{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--line-3);flex:none;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff}
+.sdot.on{background:var(--ok);border-color:var(--ok)}
+.steps{display:flex;gap:0;margin-bottom:12px}
+.stp{flex:1;min-width:70px;text-align:center;font-size:11.5px;color:var(--tx-3);padding-top:14px;position:relative}
+.stp:before{content:'';position:absolute;top:4px;left:50%;margin-left:-4px;width:8px;height:8px;border-radius:50%;background:var(--line-3)}
+.stp:after{content:'';position:absolute;top:7px;left:50%;width:100%;height:1px;background:var(--line-2)}
+.stp:last-child:after{display:none}
+.stp.done{color:var(--tx-2)}.stp.done:before,.stp.done:after{background:var(--ok)}
+.stp.on{color:var(--ac);font-weight:500}.stp.on:before{background:var(--ac)}
+.note{background:#FDF7F0;border:1px solid #F0DFC8;border-radius:var(--r-2);padding:9px 11px;font-size:12px;color:#8A6220;line-height:1.6;margin-bottom:12px}
+.note b{font-weight:600}
+.al{border-radius:var(--r);padding:9px 11px;font-size:12.5px;margin-bottom:10px;display:flex;gap:8px;line-height:1.6}
+.al.ok{background:#F2F9F5;border:1px solid #CBE8D8;color:#22694C}
+.al.warn{background:#FDF7F0;border:1px solid #F0DFC8;color:#8A6220}
+.al.err{background:#FCF4F3;border:1px solid #F0D2CF;color:#9C3229}
+.al .i{flex:none;font-weight:500}
+.doc{border:1px solid var(--line);border-radius:var(--r-2);padding:14px 16px;background:var(--panel);font-size:13px;line-height:1.7}
+.do{background:#FCF4F3;border-radius:3px;padding:1px 3px;color:#9C3229;text-decoration:line-through}
+.dn{background:#F2F9F5;border-radius:3px;padding:1px 3px;color:#22694C}
+.node{background:var(--panel);border:1px solid var(--line-2);border-radius:var(--r-2);padding:8px 10px;position:absolute;width:124px;font-size:11.5px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.canvas{background:var(--panel-2);border:1px solid var(--line);border-radius:var(--r-3);padding:14px;position:relative;min-height:224px}
+.cn{position:absolute;background:var(--line-3);height:1px;transform-origin:0 50%}
+.cn:after{content:'';position:absolute;right:0;top:-2.5px;border-left:5px solid var(--line-3);border-top:3px solid transparent;border-bottom:3px solid transparent}
+.mask{position:fixed;inset:0;background:rgba(0,0,0,.14);z-index:249;display:none}
+.mask.on{display:block}
+.dw{position:fixed;right:0;top:0;bottom:0;width:544px;max-width:92vw;background:var(--panel);border-left:1px solid var(--line-2);box-shadow:-4px 0 20px rgba(0,0,0,.08);display:none;flex-direction:column;z-index:250}
+.dw.on{display:flex}
+.dwh{height:44px;flex:none;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:9px;padding:0 14px}
+.dwb{flex:1;overflow-y:auto;min-height:0}
+.dwf{flex:none;border-top:1px solid var(--line);padding:11px 14px}
+.sc{padding:14px 16px;border-bottom:1px solid var(--line)}
+.sct{font-size:11.5px;color:var(--tx-3);margin-bottom:9px;font-weight:500}
+.tl2{display:flex;align-items:flex-start;gap:9px;padding:4px 0;font-size:12.5px}
+.tl2 .sd2{width:6px;height:6px;border-radius:50%;flex:none;margin-top:6px}
+.dw .steps{max-width:300px}
+.rc{width:252px}
+.tt{word-break:break-word}
+
+/* ═══ 交互层 ═══ */
+.tb:active,.vti:active,.ni:active{transform:translateY(.5px)}
+.tb.on{background:var(--ac-w);border-color:var(--ac-b);color:var(--ac)}
+.bx,.step,.stp,.tl{cursor:pointer;user-select:none}
+.cb.over{background:var(--ac-w);border-radius:var(--r-2)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--tx);color:#fff;font-size:12.5px;padding:9px 15px;border-radius:var(--r-3);box-shadow:0 6px 22px rgba(0,0,0,.2);z-index:500;opacity:0;transition:opacity .16s,transform .16s;pointer-events:none;display:flex;align-items:center;gap:8px;max-width:80vw}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast .tk{width:5px;height:5px;border-radius:50%;background:#7ED0A5;flex:none}
+.toast.warn .tk{background:#F0C46A}
+.toast.err .tk{background:#EE9186}
+.mask2{position:fixed;inset:0;background:rgba(0,0,0,.24);z-index:450;display:none;align-items:flex-start;justify-content:center;padding-top:12vh}
+.mask2.on{display:flex}
+.mdl{background:var(--panel);border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.2);width:520px;max-width:92vw;max-height:76vh;display:flex;flex-direction:column;overflow:hidden}
+.mdlh{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:9px;flex:none}
+.mdlh h3{font-size:14px;font-weight:600;flex:1}
+.mdlb{padding:16px;overflow-y:auto;min-height:0}
+.mdlf{padding:11px 16px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end;flex:none;background:var(--panel-2)}
+.mdlf .sp{margin-right:auto}
+.ddm{position:fixed;background:var(--panel);border:1px solid var(--line-2);border-radius:var(--r-3);box-shadow:0 4px 16px rgba(0,0,0,.1),0 0 0 1px rgba(0,0,0,.03);padding:4px;z-index:460;min-width:174px;display:none}
+.ddm.on{display:block}
+.ddi{padding:6px 9px;border-radius:var(--r);cursor:pointer;font-size:12.5px;display:flex;align-items:center;gap:8px;color:var(--tx-2)}
+.ddi:hover{background:var(--bg);color:var(--tx)}
+.ddi.sel{color:var(--ac);font-weight:500}
+.ddi.sel::after{content:'✓';margin-left:auto;font-size:11px}
+.ddi.dg{color:var(--err)}
+.ddi.dg:hover{background:#FCF4F3}
+.ddsep{height:1px;background:var(--line);margin:4px 0}
+.ddlbl{font-size:11px;color:var(--tx-3);padding:5px 9px 2px}
+.qa{margin-bottom:6px}
+.qa input{width:100%;border:1px solid var(--ac-b);border-radius:var(--r-2);padding:8px 10px;font-size:13px;outline:none;box-shadow:0 0 0 3px var(--ac-w);font-family:inherit}
+.fld{margin-bottom:12px}
+.fld label{display:block;font-size:11.5px;color:var(--tx-2);margin-bottom:5px;font-weight:500}
+.fld input,.fld select,.fld textarea{width:100%;height:32px;border:1px solid var(--line-2);border-radius:var(--r);padding:0 10px;font-size:12.5px;font-family:inherit;outline:none;background:var(--panel);color:var(--tx)}
+.fld textarea{height:auto;min-height:62px;padding:8px 10px;line-height:1.6;resize:vertical}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--ac-b);box-shadow:0 0 0 3px var(--ac-w)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{padding:4px 9px;border:1px solid var(--line-2);border-radius:20px;font-size:12px;cursor:pointer;color:var(--tx-2)}
+.chip:hover{border-color:var(--line-3)}
+.chip.on{background:var(--ac-w);border-color:var(--ac-b);color:var(--ac);font-weight:500}
+.kbox{background:var(--panel-2);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;word-break:break-all;line-height:1.6}
+.vrow{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+.vrow:last-child{border-bottom:0}
+.cse .x{margin-left:auto;font-size:12px;color:var(--tx-4);opacity:0;padding:0 3px;border-radius:3px}
+.cse:hover .x{opacity:1}
+.cse .x:hover{color:var(--err);background:#FCF4F3}
+.fb.on{background:var(--ac-w);border-color:var(--ac-b);color:var(--ac);font-weight:500}
+.onb{position:relative}
+.onb::after{content:'';position:absolute;top:-3px;right:-3px;width:7px;height:7px;border-radius:50%;background:var(--ac);border:1.5px solid var(--panel)}
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+<!-- ═════════ 左侧导航 ═════════ -->
+<nav class="nav">
+  <div class="ws">
+    <div class="wsav">A</div>
+    <div class="wsbtn">AI-test <span class="cv">▾</span></div>
+  </div>
+  <div class="sbox">
+    <div class="sbi"><span>⌕</span><span>搜索</span><span style="margin-left:auto;font-size:10.5px">⌘K</span></div>
+  </div>
+
+  <div class="nb">
+    <div class="ng">
+      <div class="ni" data-view="chat"><span class="nic">◉</span><span class="nlabel">会话</span><span class="nct">3</span></div>
+      <div class="ni"><span class="nic">☑</span><span class="nlabel">我的任务</span><span class="nct">5</span></div>
+      <div class="ni"><span class="nic">◷</span><span class="nlabel">收件箱</span><span class="nct">3</span></div>
+      <div class="ni" data-view="board"><span class="nic">▦</span><span class="nlabel">全部任务</span><span class="nct">52</span></div>
+    </div>
+
+    <div class="ng">
+      <div class="ngt">工作</div>
+      <div class="ni on" data-view="board"><span class="nic">▤</span><span class="nlabel">任务</span></div>
+      <div class="ni"><span class="nic">◫</span><span class="nlabel">待办</span></div>
+      <div class="ni"><span class="nic">⌁</span><span class="nlabel">自动化</span></div>
+      <div class="ni"><span class="nic">◱</span><span class="nlabel">报表</span></div>
+    </div>
+
+    <div class="ng">
+      <div class="ngt">团队</div>
+      <div class="ni" data-view="agents"><span class="nic">◈</span><span class="nlabel">成员</span><span class="nct">4</span></div>
+      <div class="ni" data-view="skills"><span class="nic">◉</span><span class="nlabel">技能库</span><span class="nct">42</span></div>
+      <div class="ni" data-view="hub"><span class="nic">◰</span><span class="nlabel">技能市场</span></div>
+    </div>
+
+    <div class="ng">
+      <div class="ngt">知识</div>
+      <div class="ni" data-view="kb"><span class="nic">◇</span><span class="nlabel">知识库</span><span class="nct">3</span></div>
+      <div class="ni" data-view="km"><span class="nic">▤</span><span class="nlabel">文档</span></div>
+    </div>
+
+    <div class="ng">
+      <div class="ngt">设置</div>
+      <div class="ni" data-view="models"><span class="nic">◎</span><span class="nlabel">模型</span></div>
+      <div class="ni" data-view="api"><span class="nic">⌘</span><span class="nlabel">API 与配额</span></div>
+      <div class="ni" data-view="audit"><span class="nic">☰</span><span class="nlabel">审计日志</span></div>
+    </div>
+  </div>
+</nav>
+
+<!-- ═════════ 主区 ═════════ -->
+<div class="main">
+  <div class="topbar">
+    <div class="crumb">工作 / <b id="crumb">任务</b></div>
+    <div class="vt" id="vt">
+      <div class="vti on">全部</div>
+      <div class="vti">成员</div>
+      <div class="vti">看板</div>
+    </div>
+    <div class="tr">
+      <span style="font-size:12.5px;color:var(--tx-3)" data-boardonly>52 个任务</span>
+      <button class="tb" data-boardonly>筛选</button>
+      <button class="tb" data-boardonly>分组</button>
+      <button class="tb" data-boardonly>视图 ▾</button>
+      <button class="tb pri" data-boardonly>新建任务</button>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- ════ 任务看板 ════ -->
+    <div class="pg on" id="v-board" style="padding:0">
+      <div class="kw">
+        <div class="bd">
+
+          <div class="cl">
+            <div class="clh"><span class="sd" style="background:var(--st-1)"></span><span class="clt">待排期</span><span class="cln">0</span>
+              <span class="cla"><span>＋</span><span>⋯</span></span></div>
+            <div class="cb"></div>
+            <div class="cadd"><button class="cadb">添加任务</button></div>
+          </div>
+
+          <div class="cl">
+            <div class="clh"><span class="sd" style="background:var(--st-2)"></span><span class="clt">待办</span><span class="cln">2</span>
+              <span class="cla"><span>＋</span><span>⋯</span></span></div>
+            <div class="cb">
+              <div class="tc p3" data-t="环境校验规则补齐">
+                <div class="tt">环境校验规则补齐</div>
+                <div class="tm"><span class="tid">TSK-8281</span>
+                  <span class="tmeta">7/6</span>
+                  <span class="av sm" style="background:var(--ac)">李</span></div>
+              </div>
+              <div class="tc p2" data-t="接入 Jira 双向同步">
+                <div class="tt">接入 Jira 双向同步</div>
+                <div class="tm"><span class="tid">TSK-8294</span>
+                  <span class="tmeta">7/9</span>
+                  <span class="av sm" style="background:var(--st-2)">王</span></div>
+              </div>
+            </div>
+            <div class="cadd"><button class="cadb">添加任务</button></div>
+          </div>
+
+          <div class="cl">
+            <div class="clh"><span class="sd" style="background:var(--st-3)"></span><span class="clt">进行中</span><span class="cln">1</span>
+              <span class="cla"><span>＋</span><span>⋯</span></span></div>
+            <div class="cb">
+              <div class="tc p2" data-t="渠道投放复盘报告">
+                <div class="tt">渠道投放复盘报告</div>
+                <div class="sub"><span class="sd" style="background:var(--st-3)"></span>日报生成 Agent · 剩余 2h14m</div>
+                <div class="tm" style="margin-top:7px"><span class="tid">TSK-8402</span>
+                  <span class="tmeta">¥3.2</span>
+                  <span class="av sm" style="background:var(--ac)">AI</span></div>
+              </div>
+            </div>
+            <div class="cadd"><button class="cadb">添加任务</button></div>
+          </div>
+
+          <div class="cl">
+            <div class="clh"><span class="sd" style="background:var(--st-4)"></span><span class="clt">审核中</span><span class="cln">2</span>
+              <span class="cla"><span>＋</span><span>⋯</span></span></div>
+            <div class="cb">
+              <div class="tc p1" data-t="环境校验规则，Miku 开发">
+                <div class="tt">环境校验规则，Miku 开发</div>
+                <div class="tm"><span class="tid">TSK-8380</span>
+                  <span class="tmeta">7/6 · 到期</span>
+                  <span class="av sm" style="background:var(--st-2)">ch</span></div>
+                <div class="sub"><span class="tmeta">▤</span>3 个产物</div>
+              </div>
+              <div class="tc p3" data-t="文案批量润色">
+                <div class="tt">文案批量润色（128 条）</div>
+                <div class="sub"><span class="sd" style="background:var(--st-3)"></span>日报生成 Agent · 已等待 3h</div>
+                <div class="tm" style="margin-top:7px"><span class="tid">TSK-8391</span><span class="av sm" style="background:var(--ac)">AI</span></div>
+              </div>
+            </div>
+            <div class="cadd"><button class="cadb">添加任务</button></div>
+          </div>
+
+          <div class="cl">
+            <div class="clh"><span class="sd" style="background:var(--st-5)"></span><span class="clt">已完成</span><span class="cln">47</span>
+              <span class="cla"><span>＋</span><span>⋯</span></span></div>
+            <div class="cb">
+              <div class="tc p3" data-t="Confluence 空间权限同步" style="opacity:.72">
+                <div class="tt">Confluence 空间权限同步</div>
+                <div class="tm"><span class="tid">TSK-8214</span>
+                  <span class="av sm" style="background:var(--ac)">AI</span></div>
+              </div>
+            </div>
+            <div class="cadd"><button class="cadb">添加任务</button></div>
+          </div>
+
+        </div>
+
+        <!-- 收件箱 -->
+        <aside class="rc">
+          <div class="rch">收件箱<span style="margin-left:auto;color:var(--tx-3);font-weight:400">3</span></div>
+          <div class="rlist">
+            <div class="ri od" data-t="验收：渠道投放复盘报告">
+              <div class="rit">验收：渠道投放复盘报告</div>
+              <div class="tm"><span class="tid">TSK-8402</span><span class="tmeta" style="color:var(--err)">到期 2 分钟</span><span class="av sm" style="background:var(--ac)">AI</span></div>
+            </div>
+            <div class="ri" data-t="审批：技能权限声明变更">
+              <div class="rit">审批：技能权限声明变更</div>
+              <div class="tm"><span class="tid">TSK-8396</span><span class="tmeta">剩余 3h</span><span class="av sm" style="background:var(--st-2)">李</span></div>
+            </div>
+            <div class="ri" data-t="问答点踩待归因">
+              <div class="rit">问答点踩待归因</div>
+              <div class="tm"><span class="tmeta">知识库</span><span class="av sm" style="background:var(--st-2)">张</span></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- ════ 对话 ════ -->
+    <div class="pg" id="v-chat" style="padding:0">
+      <div class="chat">
+        <!-- 会话列表 -->
+        <div class="clist">
+          <div class="clh">会话<span style="margin-left:auto"><button class="tb sm gh">＋</button></span></div>
+          <div class="clb">
+            <div class="cse on"><span class="cset">冷启动 CPM 出价规范</span></div>
+            <div class="cse"><span class="cset">Confluence 同步异常排查</span></div>
+            <div class="cse"><span class="cset">T-8380 口径说明整理</span></div>
+            <div class="cse"><span class="cset">7月投放数据初筛</span></div>
+          </div>
+        </div>
+
+        <!-- 对话主体 -->
+        <div class="cmain">
+          <div class="cmh">
+            <span style="font-size:13px;font-weight:500">冷启动 CPM 出价规范</span>
+            <span style="font-size:12px;color:var(--tx-3)">日报生成 Agent</span>
+            <div class="tr">
+              <button class="mdp" id="mPick"><span class="sd" style="width:6px;height:6px;border-radius:50%;background:var(--ac);flex:none"></span><span id="mName">Claude Opus 4.5</span><span style="color:var(--tx-3)">▾</span></button>
+            </div>
+          </div>
+
+          <div class="chatb">
+            <div class="ms">
+              <div class="mh"><span class="av sm" style="background:var(--st-2)">张</span><span class="mhn">张伟</span><span>10:02</span></div>
+              <div class="qs mb2">新项目冷启动，CPM 出价应该怎么设？先查内部规范，按 T-8380 的口径给我一份说明。</div>
+            </div>
+
+            <div class="ms">
+              <div class="mh"><span class="av sm" style="background:var(--ac)">AI</span><span class="mhn">日报生成 Agent</span><span>10:02</span></div>
+
+              <div class="tl" data-tc="tc1">▸ 知识检索 · 投放规范空间 · 命中 12 块 <span style="margin-left:auto">0.8s</span></div>
+              <div class="tlc" id="tc1">query: 冷启动 CPM 出价策略<br>space: 投放规范<br>acl: 张伟 = 可读<br>top_k: 12 → rerank → 保留 5</div>
+
+              <div class="tl" data-tc="tc2">▸ 执行技能 · 图表渲染 v0.9.2 <span style="margin-left:auto">2.1s · ¥0.4</span></div>
+              <div class="tlc" id="tc2">sandbox: sandbox-7f3a<br>skill: 图表渲染 v0.9.2（已发布）<br>本地落盘: 0 文件</div>
+
+              <div class="tl" data-tc="tc3">▸ 调用模型 · Claude Opus 4.5 <span style="margin-left:auto">31s · ¥1.3</span></div>
+              <div class="tlc" id="tc3">model: claude-opus-4.5<br>input: 3,820 tokens<br>output: 1,000 tokens</div>
+
+              <div class="mb2" style="margin-top:9px">
+                <p>按 T-8380 的口径，冷启动分三阶段：</p>
+                <ul>
+                  <li><b>首日</b> — 以行业基准 CPM 起投，观测 6 小时点击率与转化率，不做调整。</li>
+                  <li><b>次日</b> — 高于基准 20% 则预算上浮 30%；低于则收窄定向，不直接降价。</li>
+                  <li><b>第 3–7 天</b> — 跑量稳定后再提价，单次幅度不超过 20%。</li>
+                </ul>
+                <p>规范同时明确：单次点击成本高于 ¥0.8 时应先检查素材质量与人群定向，直接降价会破坏流量质量。</p>
+                <div class="cite">投放规范 · 出价策略说明 › 冷启动阶段 · 第 2 节<div class="vt">v3.2</div></div>
+                <div class="cite">TSK-8380 环境校验规则 › 口径定义<div class="vt">已确认</div></div>
+              </div>
+
+              <div class="tm" style="margin-top:8px;font-size:11.5px;color:var(--tx-3)">
+                <span>3 次工具调用</span><span>·</span><span>8.4s</span><span>·</span><span>4,820 Token</span><span>·</span><span>¥3.6</span>
+              </div>
+
+              <div style="display:flex;gap:6px;margin-top:12px">
+                <button class="tb sm">创建任务</button>
+                <button class="tb sm">存为知识</button>
+                <button class="tb sm gh">复制</button>
+              </div>
+            </div>
+
+            <div class="ms">
+              <div class="mh"><span class="av sm" style="background:var(--st-2)">张</span><span class="mhn">张伟</span><span>10:04</span></div>
+              <div class="qs mb2">整理成任务派给日报 Agent，我下午要。</div>
+            </div>
+
+            <div class="ms">
+              <div class="mh"><span class="av sm" style="background:var(--ac)">AI</span><span class="mhn">日报生成 Agent</span><span>10:04</span></div>
+              <div class="mb2">
+                <p>已创建 TSK-8402「渠道冷启动出价规范说明」，指派给日报生成 Agent，SLA 4 小时。</p>
+                <p>本次检索到的规范文档已作为上下文附入，交付后需你验收。</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="cmf">
+            <div class="cbox">
+              <div class="cinp">输入消息…</div>
+              <div class="cbar">
+                <button class="cbi">＠ 成员</button>
+                <button class="cbi">▤ 知识库</button>
+                <button class="cbi">◉ 技能</button>
+                <button class="cbi">◱ 文件</button>
+                <button class="cbi">⌁ 转为任务</button>
+                <button class="cbi" style="margin-left:auto" data-send>发送 ⏎</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 上下文栏 -->
+        <aside class="cxt">
+          <div class="xs">
+            <div class="xst">会话配置</div>
+            <div class="xrow"><span class="k">执行成员</span><span style="flex:1;display:flex;align-items:center;gap:6px"><span class="av sm" style="background:var(--ac)">AI</span>日报生成 Agent</span></div>
+            <div class="xrow"><span class="k">模型</span><span style="flex:1">Claude Opus 4.5</span></div>
+            <div class="xrow"><span class="k">知识库</span><span style="flex:1">投放规范</span></div>
+            <div class="xrow"><span class="k">技能</span><span style="flex:1">图表渲染 v0.9.2</span></div>
+            <div class="xrow"><span class="k">权限</span><span style="flex:1">运营组</span></div>
+          </div>
+          <div class="xs">
+            <div class="xst">本次用量</div>
+            <div class="kv2"><span class="k">Token</span><span class="v">4,820</span></div>
+            <div class="kv2"><span class="k">费用</span><span class="v">¥3.6</span></div>
+            <div class="kv2"><span class="k">耗时</span><span class="v">8.4s</span></div>
+          </div>
+          <div class="xs">
+            <div class="xst">关联</div>
+            <div class="tl2"><span class="sd2" style="background:var(--st-3)"></span><span style="flex:1">TSK-8402 渠道投放复盘报告</span></div>
+            <div class="tl2"><span class="sd2" style="background:var(--st-4)"></span><span style="flex:1">TSK-8380 环境校验规则</span></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- ════ 成员 ════ -->
+    <div class="pg" id="v-agents">
+      <div class="pt">成员</div>
+      <div class="ps">人类与 AI 成员在同一协作体系中，具备各自的身份、权限与配额</div>
+      <div class="note"><b>权限规则：</b>AI 成员的有效权限取 min(自身声明, 创建者权限)。创建者仅有空间 A 权限时，AI 成员声明全空间也仅在 A 内生效。</div>
+
+      <div class="card">
+        <div class="ch"><h3>成员列表</h3><button class="tb">添加成员</button></div>
+        <table>
+          <tr><th>成员</th><th>类型</th><th>能力标签</th><th>数据权限</th><th>本月任务</th><th>通过率</th><th>配额</th><th></th></tr>
+          <tr><td><span style="display:flex;align-items:center;gap:7px"><span class="av sm" style="background:var(--ac)">AI</span>日报生成 Agent</span></td><td>AI 成员</td><td>报表 · 文档</td><td>运营组</td><td>94</td><td>76%</td><td><span style="color:var(--warn)">82%</span></td><td><span class="sd" style="background:var(--st-5);display:inline-block"></span></td></tr>
+          <tr><td><span style="display:flex;align-items:center;gap:7px"><span class="av sm" style="background:var(--ac)">AI</span>数据同步助手</span></td><td>AI 成员</td><td>数据同步 · 报表</td><td>数据分析项目</td><td>128</td><td>84%</td><td>61%</td><td><span class="sd" style="background:var(--st-5);display:inline-block"></span></td></tr>
+          <tr><td><span style="display:flex;align-items:center;gap:7px"><span class="av sm" style="background:var(--ac)">AI</span>代码审查 Agent</span></td><td>AI 成员</td><td>代码审查 · 安全</td><td>全部仓库（只读）</td><td>76</td><td>71%</td><td>45%</td><td><span class="sd" style="background:var(--st-5);display:inline-block"></span></td></tr>
+          <tr><td><span style="display:flex;align-items:center;gap:7px"><span class="av sm" style="background:var(--st-2)">李</span>李明</span></td><td>人类</td><td>—</td><td>全部</td><td>—</td><td>—</td><td>—</td><td><span class="sd" style="background:var(--st-5);display:inline-block"></span></td></tr>
+          <tr><td><span style="display:flex;align-items:center;gap:7px"><span class="av sm" style="background:var(--st-2)">张</span>张伟</span></td><td>人类</td><td>—</td><td>运营组</td><td>—</td><td>—</td><td>—</td><td><span class="sd" style="background:var(--st-4);display:inline-block"></span></td></tr>
+          <tr><td><span style="display:flex;align-items:center;gap:7px"><span class="av sm" style="background:var(--st-2)">王</span>王芳</span></td><td>人类</td><td>—</td><td>数据分析项目</td><td>—</td><td>—</td><td>—</td><td><span class="sd" style="background:var(--st-1);display:inline-block"></span></td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="ch"><h3>配置 · 日报生成 Agent</h3>
+          <div><span style="font-size:12px;color:var(--tx-3);margin-right:8px">v2.1</span><button class="tb sm">调试</button> <button class="tb sm pri">保存</button></div></div>
+        <div class="steps">
+          <div class="stp done">角色</div><div class="stp done">能力</div><div class="stp done">权限</div>
+          <div class="stp on">上下文</div><div class="stp">配额</div><div class="stp">发布</div>
+        </div>
+        <div class="row">
+          <div class="cl2">
+            <div class="lbl">角色定义</div>
+            <textarea style="width:100%;min-height:60px;border:1px solid var(--line-2);border-radius:var(--r);padding:8px 10px;font-family:inherit;font-size:12.5px;resize:none;line-height:1.6">你是运营团队的报告撰写助手，负责基于知识库规范与渠道数据生成日报。所有结论可溯源到数据或文档，无依据时明确说明，不编造数值。</textarea>
+          </div>
+          <div class="cl2">
+            <div class="lbl">能力</div>
+            <table>
+              <tr><td style="width:76px;color:var(--tx-3)">模型</td><td>Claude Opus 4.5（主力）· Sonnet 4.5（备用）</td></tr>
+              <tr><td style="color:var(--tx-3)">技能</td><td>渠道数据拉取 v1.4.0 · 图表渲染 v0.9.2 · 文档生成 v1.1.0</td></tr>
+              <tr><td style="color:var(--tx-3)">工具</td><td>内部 BI 查询 · 邮件发送（域名白名单）</td></tr>
+              <tr><td style="color:var(--tx-3)">知识库</td><td>投放规范 · 历史日报（继承空间权限）</td></tr>
+            </table>
+          </div>
+          <div class="cl2">
+            <div class="lbl">数据权限</div>
+            <div class="bx on"><span class="sdot on">✓</span>运营组项目</div>
+            <div class="bx on"><span class="sdot on">✓</span>投放规范、历史日报知识空间</div>
+            <div class="bx"><span class="sdot"></span><span style="color:var(--tx-3)">全部任务队列（不勾则仅被动指派）</span></div>
+          </div>
+          <div class="cl2">
+            <div class="lbl">上下文预算 · 8K tokens（超限按序压缩）</div>
+            <div class="bx on"><span class="sdot on">✓</span>1 系统指令（保留）</div>
+            <div class="bx on"><span class="sdot on">✓</span>2 任务描述（保留）</div>
+            <div class="bx on"><span class="sdot on">✓</span>3 知识检索结果（先压缩）</div>
+            <div class="bx on"><span class="sdot on">✓</span>4 历史对话（截断）</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ 技能库 ════ -->
+    <div class="pg" id="v-skills">
+      <div class="pt">技能库</div>
+      <div class="ps">创建 · 调试 · 版本管理 · 权限声明</div>
+      <div class="row">
+        <div class="cl2" style="flex:1.35">
+          <div class="card">
+            <div class="ch"><h3>渠道数据拉取</h3>
+              <div><span style="font-size:12px;color:var(--tx-3);margin-right:8px">v1.4.0 · 已发布</span><button class="tb sm">变更记录</button> <button class="tb sm">调试</button> <button class="tb sm pri">发布</button></div></div>
+            <div class="steps">
+              <div class="stp done">信息</div><div class="stp done">输入输出</div><div class="stp on">实现</div>
+              <div class="stp">权限</div><div class="stp">验证</div><div class="stp">发布</div>
+            </div>
+            <div class="lbl">输入 Schema</div>
+            <table>
+              <tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr>
+              <tr><td>channel</td><td>string</td><td>是</td><td>渠道标识</td></tr>
+              <tr><td>date_range</td><td>string</td><td>是</td><td>YYYY-MM-DD~YYYY-MM-DD</td></tr>
+              <tr><td>metrics</td><td>array</td><td>否</td><td>默认全部指标</td></tr>
+              <tr><td>compare_period</td><td>string</td><td>否</td><td>对比周期</td></tr>
+            </table>
+            <div class="al ok" style="margin-top:11px"><span class="i">✓</span><span>静态检查通过，未检出高危调用。</span></div>
+          </div>
+        </div>
+        <div class="cl2">
+          <div class="card">
+            <div class="ch"><h3>权限声明</h3><span style="font-size:12px;color:var(--warn)">发布前校验</span></div>
+            <div class="bx on"><span class="sdot on">✓</span><span style="flex:1">访问外部 API</span><span style="color:var(--tx-3);font-size:11.5px">api.ads.internal</span></div>
+            <div class="bx on"><span class="sdot on">✓</span><span style="flex:1">写临时文件（沙箱内）</span><span style="color:var(--tx-3);font-size:11.5px">/tmp · 200MB</span></div>
+            <div class="bx"><span class="sdot"></span><span style="flex:1;color:var(--tx-3)">读取知识库</span><span style="color:var(--tx-4);font-size:11.5px">未声明</span></div>
+            <div class="bx"><span class="sdot"></span><span style="flex:1;color:var(--tx-3)">访问公网</span><span style="color:var(--tx-4);font-size:11.5px">未声明</span></div>
+            <div class="note" style="margin:9px 0 0">未声明即禁止。运行期越界由沙箱阻断并记审计。</div>
+          </div>
+          <div class="card">
+            <div class="ch"><h3>版本</h3></div>
+            <table>
+              <tr><th>版本</th><th>状态</th><th>被引用</th></tr>
+              <tr><td>v1.4.0</td><td>已发布</td><td>3 成员 / 2 流程</td></tr>
+              <tr><td>v1.3.0</td><td>已下线</td><td>0</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ 技能市场 ════ -->
+    <div class="pg" id="v-hub">
+      <div class="pt">技能市场</div>
+      <div class="ps">远程仓库直读 · 不落盘 · 三级信任</div>
+      <div class="note"><b>免下载不等于免执行。</b>平台仅同步元数据用于检索，实际使用时装入沙箱执行，本地工作区不落文件。</div>
+      <div class="card">
+        <div class="ch"><h3>仓库</h3><button class="tb">添加仓库</button></div>
+        <table>
+          <tr><th>仓库</th><th>类型</th><th>信任等级</th><th>签名校验</th><th>技能数</th><th>同步</th><th></th></tr>
+          <tr><td>platform-official</td><td>Git</td><td>官方</td><td>强制</td><td>42</td><td>2 分钟前</td><td><button class="tb sm">停用</button></td></tr>
+          <tr><td>team-data-tools</td><td>Git</td><td>组织内</td><td>强制</td><td>16</td><td>1 小时前</td><td><button class="tb sm">停用</button></td></tr>
+          <tr><td>community-hub</td><td>HTTP</td><td>社区</td><td>可选</td><td>128</td><td>3 小时前</td><td><button class="tb sm">停用</button></td></tr>
+        </table>
+      </div>
+      <div class="row">
+        <div class="cl2" style="flex:1.35">
+          <div class="card">
+            <div class="ch"><h3>可用技能</h3><div class="inp" style="height:26px;width:150px">搜索技能…</div></div>
+            <table>
+              <tr><th>技能</th><th>来源</th><th>版本</th><th>安装量</th><th>成功率</th><th>信任</th><th></th></tr>
+              <tr><td>渠道数据拉取</td><td>platform-official</td><td>v1.4.0</td><td>3,204</td><td>99.2%</td><td>官方</td><td><button class="tb sm">调用</button></td></tr>
+              <tr><td>站内语义检索</td><td>team-data-tools</td><td>v2.0.0</td><td>892</td><td>97.8%</td><td>组织内</td><td><button class="tb sm">调用</button></td></tr>
+              <tr><td>Excel 批量处理器</td><td>community-hub</td><td>v0.3.1</td><td>47</td><td>—</td><td>待审核</td><td><button class="tb sm">查看报告</button></td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="cl2">
+          <div class="card">
+            <div class="ch"><h3>安全检查</h3></div>
+            <div class="step"><span class="sdot on">✓</span>来源白名单</div>
+            <div class="step"><span class="sdot on">✓</span>签名校验</div>
+            <div class="step"><span class="sdot on">✓</span>危险调用扫描</div>
+            <div class="step"><span class="sdot on">✓</span>权限声明校验</div>
+            <div class="step"><span class="sdot on">✓</span>沙箱强制执行</div>
+            <div class="step"><span class="sdot on">✓</span>人工审核（社区源）</div>
+            <div class="step"><span class="sdot on">✓</span>一键停用</div>
+          </div>
+          <div class="card">
+            <div class="ch"><h3>本地落盘检查</h3></div>
+            <div class="al ok"><span class="i">✓</span><span>已执行 3 个远程技能，本地工作区无落盘文件。</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ 知识库 ════ -->
+    <div class="pg" id="v-kb">
+      <div class="pt">知识库</div>
+      <div class="ps">多源入库 · 混合检索 · 在线调用 · 来源可溯</div>
+      <div class="note"><b>权限规则：</b>检索时先按访问权限过滤再召回，不在生成后过滤。</div>
+      <div class="row">
+        <div class="cl2" style="flex:1.35">
+          <div class="card">
+            <div class="ch"><h3>在线调用</h3>
+              <div><span style="font-size:12px;color:var(--tx-3);margin-right:8px">范围：投放规范</span><button class="tb sm">⌘K</button></div></div>
+            <div class="ms" style="padding:0;margin:0 0 14px">
+              <div class="mh"><span class="av sm" style="background:var(--st-2)">张</span><span class="mhn">张伟</span></div>
+              <div class="qs mb2">CPM 与 CPM 混用会怎样？</div>
+            </div>
+            <div class="ms" style="padding:0;margin:0">
+              <div class="mh"><span class="av sm" style="background:var(--ac)">AI</span><span class="mhn">知识助手</span></div>
+              <div class="mb2">
+                <p>规范明确不允许在同一项目内混用两种计价方式，结算口径不一致。如需切换须走审批并新建项目。</p>
+                <div class="cite">投放规范 · 计价方式 › 第 1 节<div class="vt">v3.2</div></div>
+                <div style="display:flex;gap:6px;margin-top:10px"><button class="tb sm" data-fb="采纳">采纳</button><button class="tb sm" data-fb="点踩">点踩</button><button class="tb sm gh" data-fb="依据不足">依据不足</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="cl2">
+          <div class="card">
+            <div class="ch"><h3>同步源</h3><button class="tb sm">添加</button></div>
+            <table>
+              <tr><th>空间</th><th>源</th><th>权限</th><th>周期</th><th>块数</th></tr>
+              <tr><td>投放规范</td><td>Confluence</td><td>继承</td><td>15 分钟</td><td>1,284</td></tr>
+              <tr><td>历史日报</td><td>Confluence</td><td>继承</td><td>1 小时</td><td>862</td></tr>
+              <tr><td>产品文档</td><td>Notion</td><td>继承</td><td>30 分钟</td><td>497</td></tr>
+            </table>
+          </div>
+          <div class="card">
+            <div class="ch"><h3>检索反馈</h3></div>
+            <table>
+              <tr><th>问题</th><th>命中</th><th>反馈</th></tr>
+              <tr><td>新项目冷启动如何设价</td><td>12</td><td><span style="color:var(--ok)">采纳</span></td></tr>
+              <tr><td>出价上调幅度限制</td><td>8</td><td><span style="color:var(--ok)">采纳</span></td></tr>
+              <tr><td>混用计价方式</td><td>3</td><td><span style="color:var(--warn)">点踩</span></td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ 文档 ════ -->
+    <div class="pg" id="v-km">
+      <div class="pt">文档</div>
+      <div class="ps">在线编辑 · AI 辅助 · 版本管理</div>
+      <div class="row">
+        <div class="cl2" style="flex:1.35">
+          <div class="card">
+            <div class="ch"><h3>出价策略说明</h3>
+              <div><span style="font-size:12px;color:var(--tx-3);margin-right:8px">同步自 Confluence · 8 分钟前</span><button class="tb sm">版本</button> <button class="tb sm">AI 润色</button></div></div>
+            <div class="doc">
+              <p style="font-weight:600;font-size:14px;margin-bottom:10px">出价策略说明</p>
+              <p>平台采用 CPM 计价方式，即按千次展示计费。竞价时系统根据历史转化率动态调整出价。</p>
+              <p>当单次点击成本高于 ¥0.8 时，建议检查素材质量与人群定向配置。</p>
+            </div>
+            <div class="card" style="background:var(--panel-2);margin:12px 0 0">
+              <div class="ch"><h3>AI 润色对比</h3><span style="font-size:12px;color:var(--tx-3)">段落级</span></div>
+              <div style="font-size:11.5px;color:var(--tx-3);margin-bottom:4px">原文</div>
+              <div style="padding:8px 10px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);margin-bottom:9px"><span class="do">平台采用 CPM 计价方式，即按千次展示计费。竞价时系统根据历史转化率动态调整出价。</span></div>
+              <div style="font-size:11.5px;color:var(--tx-3);margin-bottom:4px">润色后</div>
+              <div style="padding:8px 10px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r)"><span class="dn">平台统一采用 CPM 计价方式，按千次展示计费。在每次竞价过程中，系统会参考历史转化率动态调整出价。</span></div>
+              <div style="display:flex;gap:6px;margin-top:11px"><button class="tb sm pri">采纳</button><button class="tb sm">重新生成</button><button class="tb sm">更简洁</button><button class="tb sm gh">放弃</button></div>
+              <div style="font-size:11.5px;color:var(--tx-3);margin-top:9px">可一键还原原文；不改动事实性数据与数字；术语词库强制保留。</div>
+            </div>
+          </div>
+        </div>
+        <div class="cl2">
+          <div class="card">
+            <div class="ch"><h3>同步源</h3><button class="tb sm">添加</button></div>
+            <table>
+              <tr><th>空间</th><th>源</th><th>权限</th><th>周期</th></tr>
+              <tr><td>投放规范</td><td>Confluence</td><td>继承</td><td>15 分钟</td></tr>
+              <tr><td>产品文档</td><td>Notion</td><td>继承</td><td>30 分钟</td></tr>
+            </table>
+            <div style="font-size:11.5px;color:var(--tx-3);margin-top:8px">本期为单向镜像，双向同步列入后续版本。</div>
+          </div>
+          <div class="card">
+            <div class="ch"><h3>权限一致性</h3><span style="font-size:12px;color:var(--ok)">无越权</span></div>
+            <div style="font-size:12.5px;color:var(--tx-2);line-height:1.6">抽样校验同步页面权限与源端一致；无权限用户在检索结果中看不到受限内容。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ 模型 ════ -->
+    <div class="pg" id="v-models">
+      <div class="pt">模型</div>
+      <div class="ps">多厂商接入 · 场景路由 · 故障降级 · 用量留痕</div>
+      <div class="note"><b>可用性：</b>主力模型故障自动降级，不中断任务；全部不可用时任务挂起并通知，不静默失败。</div>
+      <div class="card">
+        <div class="ch"><h3>已接入</h3><button class="tb">接入模型</button></div>
+        <table>
+          <tr><th>模型</th><th>厂商</th><th>上下文</th><th>健康</th><th>用途</th><th>优先级</th></tr>
+          <tr><td>Claude Opus 4.5</td><td>Anthropic</td><td>200K</td><td><span style="color:var(--ok)">正常</span></td><td>复杂推理</td><td>主力</td></tr>
+          <tr><td>Claude Sonnet 4.5</td><td>Anthropic</td><td>200K</td><td><span style="color:var(--ok)">正常</span></td><td>日常执行</td><td>备用</td></tr>
+          <tr><td>DeepSeek V3</td><td>DeepSeek</td><td>64K</td><td><span style="color:var(--ok)">正常</span></td><td>批处理</td><td>P1</td></tr>
+          <tr><td>Qwen2.5-72B</td><td>自托管</td><td>32K</td><td><span style="color:var(--warn)">负载 88%</span></td><td>涉敏感数据</td><td>P2</td></tr>
+          <tr><td>内部代码模型</td><td>自建</td><td>16K</td><td><span style="color:var(--err)">不可用</span></td><td>代码补全</td><td>已停用</td></tr>
+        </table>
+      </div>
+      <div class="row">
+        <div class="cl2">
+          <div class="card">
+            <div class="ch"><h3>场景路由</h3></div>
+            <div class="fr"><label class="lbl">复杂推理</label><div class="sel"><span>Claude Opus 4.5 → Sonnet 4.5</span><span style="color:var(--tx-3)">▾</span></div></div>
+            <div class="fr"><label class="lbl">日常执行</label><div class="sel"><span>Sonnet 4.5 → DeepSeek V3</span><span style="color:var(--tx-3)">▾</span></div></div>
+            <div class="fr"><label class="lbl">高并发批处理</label><div class="sel"><span>DeepSeek V3 → Qwen2.5-72B</span><span style="color:var(--tx-3)">▾</span></div></div>
+            <div class="fr"><label class="lbl">涉敏感数据</label><div class="sel"><span>Qwen2.5-72B（本地，不出网）</span><span style="color:var(--tx-3)">▾</span></div></div>
+          </div>
+        </div>
+        <div class="cl2">
+          <div class="card">
+            <div class="ch"><h3>降级记录</h3></div>
+            <table>
+              <tr><th>时间</th><th>事件</th><th>处理</th></tr>
+              <tr><td>09-28 14:22</td><td>Opus 超时率 &gt;5%</td><td>降级 Sonnet</td></tr>
+              <tr><td>10-07 22:10</td><td>内部代码模型超时</td><td>停用该模型</td></tr>
+            </table>
+          </div>
+          <div class="card">
+            <div class="ch"><h3>本月用量</h3></div>
+            <table>
+              <tr><th>模型</th><th>Token</th><th>成本</th></tr>
+              <tr><td>Opus 4.5</td><td>2.4M</td><td>¥1,820</td></tr>
+              <tr><td>Sonnet 4.5</td><td>6.8M</td><td>¥912</td></tr>
+              <tr><td>DeepSeek V3</td><td>8.2M</td><td>¥164</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ API 与配额 ════ -->
+    <div class="pg" id="v-api">
+      <div class="pt">API 与配额</div>
+      <div class="ps">开放能力 · 幂等 · 限流 · 用量归因</div>
+      <div class="note"><b>计量要求：</b>写操作必须幂等，每日与模型厂商对账，用量超预算熔断并告警。三项均为必做项。</div>
+      <div class="row">
+        <div class="cl2">
+          <div class="card">
+            <div class="ch"><h3>API Key</h3><button class="tb">创建</button></div>
+            <table>
+              <tr><th>名称</th><th>作用域</th><th>限流</th><th>本月调用</th><th></th></tr>
+              <tr><td>ci-pipeline</td><td>流程执行</td><td>60/min</td><td>12,480</td><td><button class="tb sm">吊销</button></td></tr>
+              <tr><td>portal-web</td><td>成员对话 · 知识检索</td><td>300/min</td><td>48,201</td><td><button class="tb sm">吊销</button></td></tr>
+            </table>
+            <div style="font-size:11.5px;color:var(--tx-3);margin-top:8px">密钥仅创建时显示一次，平台仅存哈希。</div>
+          </div>
+          <div class="card">
+            <div class="ch"><h3>可调用能力</h3><span style="font-size:12px;color:var(--tx-3)">OpenAPI 3.1</span></div>
+            <table>
+              <tr><td>POST /v1/workflows/{id}/run</td><td>触发流程</td><td>同步 / 异步</td></tr>
+              <tr><td>POST /v1/agents/{id}/invoke</td><td>调用成员</td><td>支持流式</td></tr>
+              <tr><td>POST /v1/skills/{id}/execute</td><td>调用技能</td><td>沙箱内执行</td></tr>
+              <tr><td>POST /v1/knowledge/query</td><td>知识问答</td><td>返回来源</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="cl2">
+          <div class="card">
+            <div class="ch"><h3>安全约束</h3></div>
+            <div class="step"><span class="sdot on">✓</span>写操作必带幂等键</div>
+            <div class="step"><span class="sdot on">✓</span>写操作需签名 + 时间戳（5 分钟窗口）</div>
+            <div class="step"><span class="sdot on">✓</span>三级限流：Key / 租户 / 模型</div>
+            <div class="step"><span class="sdot on">✓</span>出网域名白名单</div>
+          </div>
+          <div class="card">
+            <div class="ch"><h3>用量与对账</h3></div>
+            <table>
+              <tr><th>调用方</th><th>Token</th><th>成本</th><th>归属</th></tr>
+              <tr><td>ci-pipeline</td><td>2.4M</td><td>¥182</td><td>数据平台</td></tr>
+              <tr><td>portal-web</td><td>8.1M</td><td>¥624</td><td>官网运营</td></tr>
+            </table>
+            <div class="al ok" style="margin-top:10px"><span class="i">✓</span><span>今日对账差异 0.02%，在阈值内。</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ 审计 ════ -->
+    <div class="pg" id="v-audit">
+      <div class="pt">审计日志</div>
+      <div class="ps">全链路追踪 · 双主体留痕 · 不可篡改</div>
+      <div class="note"><b>留痕规则：</b>所有 AI 成员行为同时记录执行主体与发起人。审计写入失败时阻断敏感操作。</div>
+      <div class="card">
+        <div class="ch"><h3>tr-9f2a7c</h3><span style="font-size:12px;color:var(--tx-3)">留存 180 天</span></div>
+        <table>
+          <tr><th>时间</th><th>主体</th><th>发起人</th><th>动作</th><th>资源</th><th>耗时</th><th>Token</th><th>结果</th></tr>
+          <tr><td>10:02:11</td><td>张伟</td><td>张伟</td><td>创建任务</td><td>TSK-8402</td><td>0.3s</td><td>—</td><td><span style="color:var(--ok)">成功</span></td></tr>
+          <tr><td>10:02:15</td><td>日报生成 Agent</td><td>张伟</td><td>执行技能</td><td>渠道数据拉取 v1.4.0</td><td>14s</td><td>820</td><td><span style="color:var(--ok)">成功</span></td></tr>
+          <tr><td>10:02:37</td><td>日报生成 Agent</td><td>张伟</td><td>调用模型</td><td>Claude Opus 4.5</td><td>31s</td><td>4,000</td><td><span style="color:var(--ok)">成功</span></td></tr>
+          <tr><td>10:03:08</td><td>日报生成 Agent</td><td>张伟</td><td>提交交付物</td><td>ART-1192</td><td>1.2s</td><td>—</td><td><span style="color:var(--ok)">成功</span></td></tr>
+        </table>
+      </div>
+      <div class="row">
+        <div class="cl2">
+          <div class="card">
+            <div class="ch"><h3>安全事件</h3><span style="font-size:12px;color:var(--ok)">无高危</span></div>
+            <table>
+              <tr><th>类型</th><th>今日</th><th>本月</th></tr>
+              <tr><td>技能越权拦截</td><td>3</td><td>41</td></tr>
+              <tr><td>签名校验失败</td><td>1</td><td>6</td></tr>
+              <tr><td>数据越权拦截</td><td>0</td><td>2</td></tr>
+              <tr><td>密钥异常访问</td><td>0</td><td>0</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="cl2">
+          <div class="card">
+            <div class="ch"><h3>异常处理</h3><span style="font-size:12px;color:var(--tx-3)">预置 20 项</span></div>
+            <table>
+              <tr><td>沙箱启动失败</td><td>重试 2 次后挂起</td></tr>
+              <tr><td>主力模型不可用</td><td>自动降级</td></tr>
+              <tr><td>检索依据不足</td><td>显式声明</td></tr>
+              <tr><td>接口超限流</td><td>429 + 重试建议</td></tr>
+              <tr><td>审计写入失败</td><td>阻断敏感操作</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- ═════════ 任务抽屉 ═════════ -->
+<div class="mask" id="mask"></div>
+<aside class="dw" id="dw">
+  <div class="dwh">
+    <span style="font-size:12px;color:var(--tx-3)" id="dwId">TSK-8402</span>
+    <span style="font-weight:500" id="dwT">渠道投放复盘报告</span>
+    <div class="tr"><span style="font-size:12px;color:var(--warn)" id="dwS">审核中</span><button class="tb sm gh" onclick="cdw()">✕</button></div>
+  </div>
+  <div class="dwb">
+    <div class="sc">
+      <div class="kv2"><span class="k">负责人</span><span class="v" style="display:flex;align-items:center;gap:6px"><span class="av sm" style="background:var(--ac)">AI</span>日报生成 Agent</span></div>
+      <div class="kv2"><span class="k">发起人</span><span class="v">张伟</span></div>
+      <div class="kv2"><span class="k">SLA</span><span class="v">4 小时 · 剩余 2 小时 14 分</span></div>
+      <div class="kv2"><span class="k">成本</span><span class="v">¥3.2 · 4,820 Token</span></div>
+      <div class="kv2"><span class="k">追踪 ID</span><span class="v" style="font-family:ui-monospace,Menlo,monospace;font-size:11.5px">tr-9f2a7c</span></div>
+    </div>
+    <div class="sc">
+      <div class="sct">状态流转（单向，不可回退）</div>
+      <div class="steps" style="margin-bottom:0">
+        <div class="stp done">已分派</div><div class="stp done">执行中</div><div class="stp on">待验收</div><div class="stp">已完成</div>
+      </div>
+    </div>
+    <div class="sc">
+      <div class="sct">执行记录</div>
+      <div class="tl2"><span class="sd2" style="background:var(--ok)"></span><span style="flex:1">认领任务，生成执行计划<span style="color:var(--tx-3);font-size:11.5px">0.1s</span></span></div>
+      <div class="tl2"><span class="sd2" style="background:var(--ok)"></span><span style="flex:1">检索知识库：投放规范 · 命中 12 块<span style="color:var(--tx-3);font-size:11.5px">0.8s</span></span></div>
+      <div class="tl2"><span class="sd2" style="background:var(--ok)"></span><span style="flex:1">执行技能：渠道数据拉取 v1.4.0<span style="color:var(--tx-3);font-size:11.5px">14s</span></span></div>
+      <div class="tl2"><span class="sd2" style="background:var(--ok)"></span><span style="flex:1">生成图表（沙箱内）<span style="color:var(--tx-3);font-size:11.5px">22s</span></span></div>
+      <div class="tl2"><span class="sd2" style="background:var(--ok)"></span><span style="flex:1">撰写结论<span style="color:var(--tx-3);font-size:11.5px">31s</span></span></div>
+      <div class="al ok" style="margin:9px 0 0"><span class="i">✓</span><span>全程在沙箱内完成，本地工作区无落盘文件。</span></div>
+    </div>
+    <div class="sc">
+      <div class="sct">交付物</div>
+      <div class="card" style="margin:0 0 6px;padding:9px 10px">
+        <div style="font-size:12.5px">渠道投放复盘报告.xlsx</div>
+        <div style="font-size:11.5px;color:var(--tx-3);margin-top:3px">日报生成 Agent · ¥3.2 · v1</div>
+      </div>
+      <div class="card" style="margin:0;padding:9px 10px">
+        <div style="font-size:12.5px">趋势图表集（4 张）</div>
+        <div style="font-size:11.5px;color:var(--tx-3);margin-top:3px">沙箱内渲染 · tr-9f2a7c</div>
+      </div>
+    </div>
+    <div class="sc">
+      <div class="sct">验收</div>
+      <div class="fr"><label class="lbl">驳回原因（必填）</label>
+        <div class="sel"><span style="color:var(--tx-4)">请选择</span><span style="color:var(--tx-3)">▾</span></div>
+        <div style="font-size:11.5px;color:var(--tx-3);margin-top:4px">信息不足 / 方向错误 / 质量不合格 / 其他</div></div>
+      <div class="fr"><label class="lbl">意见</label>
+        <textarea style="width:100%;min-height:54px;border:1px solid var(--line-2);border-radius:var(--r);padding:8px 10px;font-family:inherit;font-size:12.5px;resize:none"></textarea></div>
+      <div style="display:flex;gap:7px"><button class="tb pri" style="flex:1;justify-content:center">验收通过</button><button class="tb" style="flex:1;justify-content:center;color:var(--err);border-color:#F0D2CF">打回重做</button></div>
+    </div>
+  </div>
+  <div class="dwf">
+    <div style="display:flex;gap:7px"><button class="tb" style="flex:1;justify-content:center">继续对话</button><button class="tb" style="flex:1;justify-content:center">重新指派</button></div>
+  </div>
+</aside>
+
+<!-- ═════════ 交互层容器 ═════════ -->
+<div class="toast" id="toast"><span class="tk"></span><span id="toastTxt"></span></div>
+<div class="mask2" id="mask2"><div class="mdl" id="mdl">
+  <div class="mdlh"><h3 id="mdlT">标题</h3><button class="tb sm gh" onclick="closeMdl()">✕</button></div>
+  <div class="mdlb" id="mdlB"></div>
+  <div class="mdlf" id="mdlF"></div>
+</div></div>
+<div class="ddm" id="ddm"></div>
+
+<script>
+/* ═══════ 基础工具 ═══════ */
+function $(s,p){return (p||document).querySelector(s)}
+function $$(s,p){return Array.prototype.slice.call((p||document).querySelectorAll(s))}
+
+var tTimer;
+function toast(msg,type){
+  var t=$('#toast');
+  $('#toastTxt').textContent=msg;
+  t.className='toast on'+(type?' '+type:'');
+  clearTimeout(tTimer);tTimer=setTimeout(function(){t.className='toast'+(type?' '+type:'')},2200);
+}
+
+function openMdl(title,body,footer,w){
+  $('#mdlT').textContent=title;
+  $('#mdlB').innerHTML=body;
+  $('#mdlF').innerHTML=footer||'<button class="tb" onclick="closeMdl()">关闭</button>';
+  $('#mdl').style.width=(w||520)+'px';
+  $('#mask2').classList.add('on');
+}
+function closeMdl(){$('#mask2').classList.remove('on')}
+$('#mask2').addEventListener('click',function(e){if(e.target===$('#mask2'))closeMdl()});
+
+var ddm=$('#ddm');
+function openDD(anchor,items){
+  var html='';
+  items.forEach(function(it){
+    if(it.sep){html+='<div class="ddsep"></div>';return}
+    if(it.lbl){html+='<div class="ddlbl">'+it.lbl+'</div>';return}
+    html+='<div class="ddi'+(it.sel?' sel':'')+(it.dg?' dg':'')+'" data-k="'+(it.k||'')+'" data-t="'+(it.t||'')+'">'+(it.ic?'<span style="width:14px">'+it.ic+'</span>':'')+it.n+'</div>';
+  });
+  ddm.innerHTML=html;
+  ddm.classList.add('on');
+  var r=anchor.getBoundingClientRect();
+  var top=r.bottom+5,left=r.left;
+  if(left+ddm.offsetWidth>window.innerWidth-10)left=window.innerWidth-ddm.offsetWidth-10;
+  if(top+ddm.offsetHeight>window.innerHeight-10)top=r.top-ddm.offsetHeight-5;
+  ddm.style.top=top+'px';ddm.style.left=left+'px';
+  return ddm;
+}
+function closeDD(){ddm.classList.remove('on')}
+document.addEventListener('click',function(e){if(!ddm.contains(e.target))closeDD()});
+
+/* ═══════ 导航 ═══════ */
+var NAV={board:'任务',chat:'会话',agents:'成员',skills:'技能库',hub:'技能市场',kb:'知识库',km:'文档',models:'模型',api:'API 与配额',audit:'审计日志'};
+function go(v){
+  $$('.ni').forEach(function(x){x.classList.remove('on')});
+  var ni=$('[data-view="'+v+'"]'); if(ni)ni.classList.add('on');
+  $$('.pg').forEach(function(p){p.classList.remove('on')});
+  var pg=$('#v-'+v); if(pg)pg.classList.add('on');
+  $('#crumb').textContent=NAV[v]||'任务';
+  var isBoard=(v==='board');
+  $('#vt').style.display=isBoard?'flex':'none';
+  $$('[data-boardonly]').forEach(function(el){el.style.display=isBoard?'':'none'});
+  closeDD();
+}
+$$('.ni[data-view]').forEach(function(n){n.addEventListener('click',function(){go(n.dataset.view)})});
+$$('.ni:not([data-view])').forEach(function(n){
+  n.addEventListener('click',function(){
+    $$('.ni').forEach(function(x){x.classList.remove('on')});
+    n.classList.add('on');
+    toast('「'+n.textContent.trim().replace(/\s*\d+$/,'')+'」视图开发中');
+  });
+});
+$$('.vti').forEach(function(t){t.addEventListener('click',function(){
+  $$('.vti').forEach(function(x){x.classList.remove('on')});t.classList.add('on');
+  toast('切换为「'+t.textContent+'」视图');
+})});
+
+/* ═══════ 顶栏操作 ═══════ */
+function newTaskModal(){
+  openMdl('新建任务',
+    '<div class="fld"><label>任务标题</label><input id="ntTitle" placeholder="简要描述要做什么"></div>'+
+    '<div class="fld"><label>负责人</label><select id="ntAsg">'+
+      '<option>日报生成 Agent</option><option>数据同步助手</option><option>代码审查 Agent</option>'+
+      '<option>李明</option><option>张伟</option><option>王芳</option></select></div>'+
+    '<div class="fld"><label>标签</label><div class="chips" id="ntTags">'+
+      '<span class="chip on">报表</span><span class="chip">数据分析</span><span class="chip">文档</span>'+
+      '<span class="chip">代码审查</span><span class="chip">数据同步</span></div></div>'+
+    '<div class="fld"><label>SLA</label><select id="ntSla"><option>2 小时</option><option selected>4 小时</option><option>1 天</option><option>3 天</option></select></div>'+
+    '<div class="fld"><label>验收标准</label><textarea placeholder="写明交付物与通过条件"></textarea></div>',
+    '<button class="tb sp" onclick="closeMdl()">取消</button><button class="tb pri" onclick="createTask()">创建任务</button>');
+  setTimeout(function(){
+    var t=$('#ntTitle');if(t)t.focus();
+    $$('#ntTags .chip').forEach(function(c){c.addEventListener('click',function(){c.classList.toggle('on')})});
+  },30);
+}
+function createTask(){
+  var t=($('#ntTitle').value||'').trim();
+  if(!t){toast('请填写任务标题','err');$('#ntTitle').focus();return}
+  var asg=$('#ntAsg').value,sla=$('#ntSla').value;
+  var isAI=/Agent|助手/.test(asg);
+  var tags=$$('#ntTags .chip.on').map(function(c){return c.textContent}).join(' · ')||'未分类';
+  var col=$('#v-board .cl:nth-child(2) .cb');
+  var el=document.createElement('div');
+  el.className='tc p3';
+  el.dataset.t=t;
+  el.innerHTML='<div class="tt">'+t.replace(/</g,'&lt;')+'</div>'+
+    '<div class="tm"><span class="tid">TSK-'+(8500+Math.floor(Math.random()*90))+'</span>'+
+    '<span class="tmeta">'+(new Date().getMonth()+1)+'/'+new Date().getDate()+'</span>'+
+    '<span class="av sm" style="background:'+(isAI?'var(--ac)':'var(--st-2)')+'">'+(isAI?'AI':asg.slice(0,1))+'</span></div>'+
+    '<div class="sub"><span class="sd" style="background:var(--st-1)"></span>'+tags+' · 待认领</div>';
+  el.addEventListener('click',function(){odw(t)});
+  col.appendChild(el);
+  refreshCounts();
+  closeMdl();
+  toast('已创建任务「'+t+'」，指派给 '+asg+'（SLA '+sla+'）');
+}
+
+$$('.topbar .tr .tb').forEach(function(b){
+  var txt=b.textContent.trim();
+  if(txt==='新建任务'){b.addEventListener('click',function(e){e.stopPropagation();newTaskModal()});return}
+  if(txt==='筛选'){b.addEventListener('click',function(e){e.stopPropagation();
+    openDD(b,[{lbl:'状态'},{n:'全部',sel:true},{n:'未完成'},{n:'仅我的'},{sep:1},{lbl:'优先级'},{n:'高'},{n:'中'},{n:'低'},{sep:1},{lbl:'负责人'},{n:'AI 成员'},{n:'人类成员'}]);
+    ddm.onclick=function(ev){var d=ev.target.closest('.ddi');if(!d)return;closeDD();toast('已应用筛选：'+d.textContent.trim())};
+  });return}
+  if(txt==='分组'){b.addEventListener('click',function(e){e.stopPropagation();
+    openDD(b,[{lbl:'分组方式'},{n:'按状态',sel:true},{n:'按负责人'},{n:'按优先级'},{n:'按标签'}]);
+    ddm.onclick=function(ev){var d=ev.target.closest('.ddi');if(!d)return;closeDD();toast('已切换为'+d.textContent.trim())};
+  });return}
+  if(txt.indexOf('视图')===0){b.addEventListener('click',function(e){e.stopPropagation();
+    openDD(b,[{n:'看板',ic:'▦',sel:true},{n:'列表',ic:'▤'},{n:'时间线',ic:'◷'},{n:'日历',ic:'◫'},{sep:1},{n:'另存为视图…',ic:'＋'}]);
+    ddm.onclick=function(ev){var d=ev.target.closest('.ddi');if(!d)return;closeDD();toast('已切换为'+d.textContent.trim()+'视图')};
+  });return}
+});
+
+/* ═══════ 看板：列操作 / 快速添加 / 拖拽 ═══════ */
+function refreshCounts(){
+  $$('#v-board .cl').forEach(function(col){
+    var n=col.querySelectorAll('.tc').length;
+    col.querySelector('.cln').textContent=n;
+    col.querySelector('.cb').dataset.empty=(n===0?'1':'');
+  });
+}
+var CN=['待排期','待办','进行中','审核中','已完成'];
+$$('#v-board .cl').forEach(function(col,idx){
+  var acts=col.querySelectorAll('.cla span');
+  acts[0].addEventListener('click',function(e){e.stopPropagation();quickAdd(col)});
+  acts[1].addEventListener('click',function(e){e.stopPropagation();
+    openDD(this,[{n:'重命名列',ic:'✎'},{n:'设置列上限…',ic:'◫'},{n:'按优先级排序',ic:'↓'},{n:'按截止时间排序',ic:'↓'},{sep:1},{n:'清空本列',ic:'✕',dg:true}]);
+    ddm.onclick=function(ev){var d=ev.target.closest('.ddi');if(!d)return;closeDD();
+      if(/清空/.test(d.textContent)){col.querySelector('.cb').innerHTML='';refreshCounts();toast('已清空「'+CN[idx]+'」列','warn')}
+      else toast('已执行：'+d.textContent.trim());
+    };
+  });
+  col.querySelector('.cadb').addEventListener('click',function(e){e.stopPropagation();quickAdd(col)});
+});
+function quickAdd(col){
+  var cb=col.querySelector('.cb');
+  if(cb.querySelector('.qa')){cb.querySelector('.qa input').focus();return}
+  var w=document.createElement('div');w.className='qa';
+  w.innerHTML='<input placeholder="输入标题，回车创建">';
+  cb.insertBefore(w,cb.firstChild);
+  var i=w.querySelector('input');i.focus();
+  function done(keep){
+    var v=i.value.trim();
+    if(v){
+      var el=document.createElement('div');el.className='tc p3';el.dataset.t=v;
+      el.innerHTML='<div class="tt">'+v.replace(/</g,'&lt;')+'</div><div class="tm"><span class="tid">TSK-'+
+        (8500+Math.floor(Math.random()*90))+'</span><span class="tmeta">今天</span></div>';
+      el.addEventListener('click',function(){odw(v)});
+      cb.insertBefore(el,cb.querySelector('.qa'));
+      refreshCounts();toast('已添加：'+v);
+    }
+    if(!keep)w.remove();
+  }
+  i.addEventListener('keydown',function(e){
+    if(e.key==='Enter'){e.preventDefault();done(true);i.value='';i.focus();}
+    if(e.key==='Escape'){done(false)}
+  });
+  i.addEventListener('blur',function(){setTimeout(function(){if(w.parentNode)done(false)},180)});
+}
+
+/* 拖拽任务卡（指针事件，兼容触屏与无 DnD 环境） */
+var dragCard=null,dragGhost=null,dragOX=0,dragOY=0,dragMoved=false,dragSX=0,dragSY=0;
+function ptStart(e){
+  if(e.target.closest('.qa')||e.target.closest('button'))return;
+  var card=e.currentTarget;
+  var p=e.touches?e.touches[0]:e;
+  var r=card.getBoundingClientRect();
+  dragCard=card;dragOX=p.clientX-r.left;dragOY=p.clientY-r.top;
+  dragSX=p.clientX;dragSY=p.clientY;dragMoved=false;
+  dragGhost=null;
+}
+function ptMove(e){
+  if(!dragCard)return;
+  var p=e.touches?e.touches[0]:e;
+  if(!dragMoved){
+    if(Math.abs(p.clientX-dragSX)<5&&Math.abs(p.clientY-dragSY)<5)return;
+    dragMoved=true;
+    var r=dragCard.getBoundingClientRect();
+    dragGhost=dragCard.cloneNode(true);
+    dragGhost.style.cssText='position:fixed;width:'+r.width+'px;z-index:600;pointer-events:none;opacity:.92;box-shadow:0 8px 26px rgba(0,0,0,.18);margin:0;left:'+r.left+'px;top:'+r.top+'px';
+    document.body.appendChild(dragGhost);
+    dragCard.style.opacity='.35';
+  }
+  dragGhost.style.left=(p.clientX-dragOX)+'px';
+  dragGhost.style.top=(p.clientY-dragOY)+'px';
+  $$('.cb').forEach(function(cb){
+    var r=cb.getBoundingClientRect();
+    var hit=p.clientX>=r.left&&p.clientX<=r.right&&p.clientY>=r.top&&p.clientY<=r.bottom;
+    cb.classList.toggle('over',hit);
+  });
+  if(e.cancelable)e.preventDefault();
+}
+function ptEnd(e){
+  if(!dragCard)return;
+  var card=dragCard,moved=dragMoved;
+  var p=e.changedTouches?e.changedTouches[0]:e;
+  var target=null;
+  $$('.cb').forEach(function(cb){
+    var r=cb.getBoundingClientRect();
+    if(moved&&p.clientX>=r.left&&p.clientX<=r.right&&p.clientY>=r.top&&p.clientY<=r.bottom)target=cb;
+    cb.classList.remove('over');
+  });
+  if(dragGhost){dragGhost.remove();dragGhost=null}
+  card.style.opacity='';
+  dragCard=null;dragMoved=false;
+  if(moved){
+    window.__justDragged=Date.now();
+    if(target&&target!==card.parentNode){
+      var name=card.dataset.t;
+      target.insertBefore(card,target.firstChild);
+      refreshCounts();
+      toast('「'+name+'」已移至 '+CN[$$('#v-board .cl').indexOf(target.closest('.cl'))]);
+    }
+  }
+}
+document.addEventListener('mousemove',ptMove);
+document.addEventListener('mouseup',ptEnd);
+document.addEventListener('touchmove',ptMove,{passive:false});
+document.addEventListener('touchend',ptEnd);
+$$('.tc').forEach(function(c){
+  c.addEventListener('mousedown',ptStart);
+  c.addEventListener('touchstart',ptStart,{passive:true});
+});
+$$('.cb').forEach(function(cb){
+  cb.addEventListener('dragover',function(e){e.preventDefault();cb.classList.add('over')});
+  cb.addEventListener('dragleave',function(){cb.classList.remove('over')});
+  cb.addEventListener('drop',function(e){e.preventDefault();cb.classList.remove('over')});
+});
+
+/* ═══════ 任务抽屉 ═══════ */
+var curTask=null;
+function odw(t){
+  curTask=t;
+  $('#dwT').textContent=t;
+  $('#dwId').textContent='TSK-'+(8400+Math.abs(t.length*7)%90);
+  $('#mask').classList.add('on');
+  $('#dw').classList.add('on');
+}
+function cdw(){$('#mask').classList.remove('on');$('#dw').classList.remove('on')}
+document.addEventListener('click',function(e){
+  var c=e.target.closest('.tc,.ri');
+  if(!c||e.target.closest('.qa')||e.target.closest('button'))return;
+  if(window.__justDragged&&Date.now()-window.__justDragged<350)return;
+  odw(c.dataset.t);
+});
+$('#mask').addEventListener('click',cdw);
+
+/* 抽屉按钮 */
+$$('#dw .dwf .tb').forEach(function(b){
+  b.addEventListener('click',function(e){
+    e.stopPropagation();
+    if(/继续对话/.test(b.textContent)){
+      cdw();go('chat');
+      toast('已跳转到会话：「'+curTask+'」');
+    } else {
+      openDD(b,[{lbl:'指派给'},{n:'日报生成 Agent',ic:'◦'},{n:'数据同步助手',ic:'◦'},{n:'代码审查 Agent',ic:'◦'},{sep:1},{n:'李明',ic:'◦'},{n:'张伟',ic:'◦'}]);
+      ddm.onclick=function(ev){ev.stopPropagation();var d=ev.target.closest('.ddi');if(!d)return;closeDD();toast('已重新指派给 '+d.textContent.trim())};
+    }
+  });
+});
+$$('#dw .sc .tb').forEach(function(b){
+  b.addEventListener('click',function(){
+    if(/验收通过/.test(b.textContent)){
+      moveTask(curTask,'已完成');cdw();toast('已验收通过，任务移入「已完成」');
+    } else if(/打回重做/.test(b.textContent)){
+      var sel=$('#dw .sel span');
+      if(sel&&/请选择/.test(sel.textContent)){toast('请先选择驳回原因','err');return}
+      moveTask(curTask,'进行中');cdw();toast('已打回重做，理由已进入执行上下文','warn');
+    }
+  });
+});
+function moveTask(t,colName){
+  var card=$('.tc[data-t="'+t+'"]');
+  var idx=CN.indexOf(colName);
+  if(card&&idx>-1){
+    card.className=card.className.replace(/p[123]/,'p3');
+    $('#v-board .cl:nth-child('+(idx+1)+') .cb').insertBefore(card,$('#v-board .cl:nth-child('+(idx+1)+') .cb').firstChild);
+    refreshCounts();
+  }
+}
+/* 抽屉下拉（驳回原因） */
+$$('#dw .sel').forEach(function(s){
+  s.addEventListener('click',function(e){e.stopPropagation();
+    openDD(s,[{n:'信息不足',ic:'◦'},{n:'方向错误',ic:'◦'},{n:'质量不合格',ic:'◦'},{n:'其他',ic:'◦'}]);
+    ddm.onclick=function(ev){var d=ev.target.closest('.ddi');if(!d)return;
+      s.querySelector('span').textContent=d.textContent.trim();
+      s.querySelector('span').style.color='';closeDD();};
+  });
+});
+/* 抽屉状态流转可点 */
+$$('#dw .stp').forEach(function(st,i){
+  st.addEventListener('click',function(){
+    $$('#dw .stp').forEach(function(x,j){x.className='stp'+(j<i?' done':(j===i?' on':''))});
+    $('#dwS').textContent=st.textContent;
+    toast('已流转到「'+st.textContent+'」');
+  });
+});
+
+/* ═══════ 会话页 ═══════ */
+var PICK=$('#mPick'),MNU=null;
+function buildModelMenu(){
+  if(MNU)return MNU;
+  MNU=document.createElement('div');MNU.className='mnu';MNU.id='mnu2';MNU.style.display='none';
+  MNU.innerHTML=
+    '<div class="mi on" data-m="Claude Opus 4.5" data-c="var(--ac)"><div class="n"><span class="sd" style="background:var(--ac)"></span>Claude Opus 4.5<span style="margin-left:auto;font-size:11px;color:var(--tx-3)">主力</span></div><div class="d">复杂推理</div></div>'+
+    '<div class="mi" data-m="Claude Sonnet 4.5" data-c="#3FA97A"><div class="n"><span class="sd" style="background:#3FA97A"></span>Claude Sonnet 4.5<span style="margin-left:auto;font-size:11px;color:var(--tx-3)">备用</span></div><div class="d">日常执行</div></div>'+
+    '<div class="mi" data-m="DeepSeek V3" data-c="#E5A13A"><div class="n"><span class="sd" style="background:#E5A13A"></span>DeepSeek V3</div><div class="d">批处理 · 低成本</div></div>'+
+    '<div class="mi" data-m="Qwen2.5-72B 本地" data-c="#8A8A84"><div class="n"><span class="sd" style="background:#8A8A84"></span>Qwen2.5-72B 本地</div><div class="d">涉敏感数据不出网</div></div>'+
+    '<div class="msep"></div><div class="mi" data-go="models"><div class="n" style="color:var(--ac)">模型设置 →</div></div>';
+  document.body.appendChild(MNU);
+  MNU.addEventListener('click',function(e){
+    e.stopPropagation();
+    var mi=e.target.closest('.mi');if(!mi)return;
+    if(mi.dataset.m){
+      $$('.mi',MNU).forEach(function(x){x.classList.remove('on')});mi.classList.add('on');
+      $('#mName').textContent=mi.dataset.m;
+      PICK.querySelector('.sd').style.background=mi.dataset.c;
+      toast('已切换模型：'+mi.dataset.m);
+    } else if(mi.dataset.go){go(mi.dataset.go);toast('已进入模型设置')}
+    MNU.style.display='none';
+  });
+  return MNU;
+}
+PICK.addEventListener('click',function(e){e.stopPropagation();
+  var m=buildModelMenu(),r=PICK.getBoundingClientRect();
+  m.style.display='block';
+  m.style.top=(r.bottom+5)+'px';
+  m.style.left=Math.max(8,r.right-m.offsetWidth)+'px';
+});
+document.addEventListener('click',function(){if(MNU)MNU.style.display='none'});
+
+/* 工具调用折叠 */
+$$('.tl[data-tc]').forEach(function(l){
+  l.addEventListener('click',function(e){e.stopPropagation();
+    var box=$('#'+l.dataset.tc);
+    box.classList.toggle('on');
+    l.textContent=l.textContent.replace(/^[▸▾]/,'')!==l.textContent?(box.classList.contains('on')?'':'')+l.textContent.replace(/^[▸▾]\s*/,'▾ '):l.textContent;
+  });
+});
+$$('.tl[data-tc]').forEach(function(l){l.textContent='▸'+l.textContent.replace(/^[▸▾]/,'').trim()});
+
+/* 会话列表 */
+$$('.cse').forEach(function(s){
+  if(!s.querySelector('.x')){
+    var x=document.createElement('span');x.className='x';x.textContent='✕';
+    x.title='删除会话';
+    x.addEventListener('click',function(e){e.stopPropagation();s.remove();toast('已删除会话','warn')});
+    s.appendChild(x);
+  }
+  s.addEventListener('click',function(){
+    $$('.cse').forEach(function(o){o.classList.remove('on')});
+    s.classList.add('on');
+    $('.cmh > span').textContent=s.querySelector('.cset')?s.querySelector('.cset').textContent:s.textContent.trim();
+    toast('已切换到会话');
+  });
+});
+$$('.clist .clh .tb').forEach(function(b){
+  b.addEventListener('click',function(){
+    var t='新会话 '+(new Date().getHours()+':'+String(new Date().getMinutes()).padStart(2,'0'));
+    var el=document.createElement('div');el.className='cse';
+    el.innerHTML='<span class="cset">'+t+'</span><span class="x">✕</span>';
+    el.querySelector('.x').addEventListener('click',function(e){e.stopPropagation();el.remove();toast('已删除会话','warn')});
+    el.addEventListener('click',function(){$$('.cse').forEach(function(o){o.classList.remove('on')});el.classList.add('on');$('.cmh > span').textContent=t});
+    $('.clb').insertBefore(el,$('.clb').firstChild);
+    $$('.cse').forEach(function(o){o.classList.remove('on')});el.classList.add('on');
+    $('.cmh > span').textContent=t;
+    toast('已新建会话');
+  });
+});
+
+/* 输入与发送 */
+var cinp=$('.cinp');
+cinp.setAttribute('contenteditable','true');
+cinp.setAttribute('spellcheck','false');
+function sendMsg(){
+  var v=cinp.textContent.trim();
+  if(!v){toast('请输入内容','err');return}
+  var cb=$('.chatb');
+  var u=document.createElement('div');u.className='ms';
+  u.innerHTML='<div class="mh"><span class="av sm" style="background:var(--st-2)">张</span><span class="mhn">张伟</span><span>刚刚</span></div>'+
+    '<div class="qs mb2">'+v.replace(/</g,'&lt;')+'</div>';
+  cb.appendChild(u);
+  cinp.textContent='';
+  cb.scrollTop=cb.scrollHeight;
+  var a=document.createElement('div');a.className='ms';
+  a.innerHTML='<div class="mh"><span class="av sm" style="background:var(--ac)">AI</span><span class="mhn">日报生成 Agent</span><span>刚刚</span></div>'+
+    '<div class="tl">▸ 知识检索 · 投放规范空间 · 命中 8 块<span style="margin-left:auto">0.6s</span></div>'+
+    '<div class="mb2" style="margin-top:9px"><p>已收到。正在按投放规范空间检索相关内容，稍后给出带来源的结论。</p>'+
+    '<div class="cite">投放规范 · 出价策略说明<div class="vt">v3.2</div></div></div>';
+  a.querySelector('.tl').addEventListener('click',function(){toast('展开工具调用详情')});
+  setTimeout(function(){cb.appendChild(a);cb.scrollTop=cb.scrollHeight},520);
+  toast('已发送');
+}
+$$('[data-send]').forEach(function(b){b.addEventListener('click',sendMsg)});
+cinp.addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg()}
+});
+cinp.addEventListener('focus',function(){
+  if(/输入消息/.test(cinp.textContent))cinp.textContent='';
+});
+cinp.addEventListener('blur',function(){
+  if(!cinp.textContent.trim())cinp.textContent='输入消息…';
+});
+
+/* 会话页底部按钮 */
+$$('.cbar .cbi').forEach(function(b){
+  var t=b.textContent.trim();
+  if(/发送/.test(t))return;
+  b.addEventListener('click',function(e){e.stopPropagation();
+    if(/＠\s*成员/.test(t)){openDD(b,[{lbl:'选择成员'},{n:'日报生成 Agent',ic:'◦'},{n:'数据同步助手',ic:'◦'},{n:'代码审查 Agent',ic:'◦'},{n:'李明',ic:'◦'},{n:'张伟',ic:'◦'}]);
+      ddm.onclick=function(ev){var d=ev.target.closest('.ddi');if(!d)return;closeDD();cinp.textContent='@'+d.textContent.trim()+' ';cinp.focus()};return}
+    if(/知识库/.test(t)){openDD(b,[{lbl:'会话知识范围'},{n:'投放规范',sel:true},{n:'历史日报'},{n:'产品文档'},{sep:1},{n:'不限范围'},{n:'不加知识库'}]);
+      ddm.onclick=function(ev){var d=ev.target.closest('.ddi');if(!d)return;closeDD();$$('.xrow').forEach(function(r){
+        if(r.querySelector('.k')&&r.querySelector('.k').textContent==='知识库')r.querySelector('.v').textContent=d.textContent.trim()});
+        toast('知识范围已设为：'+d.textContent.trim())};return}
+    if(/技能/.test(t)){openDD(b,[{lbl:'可用技能'},{n:'渠道数据拉取 v1.4.0'},{n:'图表渲染 v0.9.2'},{n:'文档生成 v1.1.0'},{n:'站内语义检索 v2.0.0'}]);
+      ddm.onclick=function(ev){var d=ev.target.closest('.ddi');if(!d)return;closeDD();toast('已附加技能：'+d.textContent.trim())};return}
+    if(/文件/.test(t)){toast('已选择文件：投放数据-0930.xlsx')}
+    if(/转为任务/.test(t)){newTaskModal()}
+  });
+});
+/* 消息下操作 */
+$$('.chatb .tb.sm').forEach(function(b){
+  b.addEventListener('click',function(e){e.stopPropagation();
+    var t=b.textContent.trim();
+    if(/创建任务/.test(t)){newTaskModal()}
+    else if(/存为知识/.test(t)){openMdl('存为知识文档',
+      '<div class="fld"><label>文档标题</label><input value="冷启动 CPM 出价规范说明"></div>'+
+      '<div class="fld"><label>归入空间</label><select><option>投放规范</option><option>历史日报</option><option>产品文档</option></select></div>'+
+      '<div class="fld"><label>标签</label><div class="chips"><span class="chip on">出价</span><span class="chip on">冷启动</span><span class="chip">CPM</span></div></div>',
+      '<button class="tb sp" onclick="closeMdl()">取消</button><button class="tb pri" onclick="closeMdl();toast(\'已存为知识文档，索引构建中\')">保存</button>');
+      setTimeout(function(){$$('#mdlB .chip').forEach(function(c){c.addEventListener('click',function(){c.classList.toggle('on')})})},30);
+    }
+    else if(/复制/.test(t)){toast('已复制到剪贴板')}
+    else {toast('已'+t)}
+  });
+});
+
+/* ═══════ 通用：可切换勾选 ═══════ */
+$$('.bx').forEach(function(b){
+  b.addEventListener('click',function(e){
+    if(e.target.closest('.tb'))return;
+    b.classList.toggle('on');
+    var d=b.querySelector('.sdot');
+    if(d){d.classList.toggle('on');d.textContent=b.classList.contains('on')?'✓':''}
+    var lbl=b.textContent.trim().replace(/^✓/,'');
+    if(/权限|知识|项目|队列|系统指令|任务描述|检索|历史对话/.test(lbl)){
+      toast(lbl.slice(0,22)+(b.classList.contains('on')?' 已启用':' 已关闭'),b.classList.contains('on')?'':'warn');
+    }
+  });
+});
+$$('.step').forEach(function(s){
+  s.addEventListener('click',function(){
+    s.querySelector('.sdot').classList.toggle('on');
+    s.querySelector('.sdot').textContent=s.querySelector('.sdot').classList.contains('on')?'✓':'';
+  });
+});
+$$('.stp').forEach(function(s){
+  if(s.closest('#dw'))return;
+  s.addEventListener('click',function(){
+    var arr=$$('.stp',s.parentNode),i=arr.indexOf(s);
+    arr.forEach(function(x,j){x.className='stp'+(j<i?' done':(j===i?' on':''))});
+    toast('当前步骤：'+s.textContent);
+  });
+});
+/* 反馈按钮（采纳 / 点踩 / 依据不足） */
+$$('[data-fb]').forEach(function(b){
+  b.addEventListener('click',function(e){
+    e.stopPropagation();
+    var k=b.dataset.fb;
+    Array.prototype.forEach.call(b.parentNode.querySelectorAll('[data-fb]'),function(x){x.classList.remove('fb')});
+    b.classList.add('fb');
+    toast(k==='采纳'?'已采纳，感谢反馈':(k==='点踩'?'已点踩，样本进入优化队列':'已标记依据不足'));
+  });
+});
+
+/* ═══════ 动作按钮统一绑定（表格内 / 卡片头 / 任意位置） ═══════ */
+function ctxName(b){
+  var row=b.closest('tr');
+  if(row&&row.cells&&row.cells[0])return row.cells[0].textContent.trim();
+  var vrow=b.closest('.vrow');
+  if(vrow)return vrow.textContent.trim().slice(0,40);
+  return '';
+}
+function chipPicker(scope){
+  $$('.chip',scope).forEach(function(c){c.addEventListener('click',function(){
+    $$('.chip',c.parentNode).forEach(function(x){x.classList.remove('on')});c.classList.add('on')})});
+}
+function wireRows(){
+  $$('button.tb,button.tbtn').forEach(function(b){
+    if(b.dataset.wired||b.getAttribute('onclick')||b.hasAttribute('data-fb'))return;
+    if(b.closest('.topbar')||b.closest('.ni')||b.closest('.dw')||b.closest('.clist')||
+       b.closest('.cbar')||b.closest('.chatb')||b.closest('.mnu')||b.closest('.mdl')||
+       b.closest('.clh')||b.closest('.ws')||b.closest('.sbox'))return;
+    b.dataset.wired='1';
+    b.addEventListener('click',function(e){
+      e.stopPropagation();
+      var t=b.textContent.trim().replace(/^[＋+]\s*/,'');
+      var name=ctxName(b);
+
+      if(t==='停用'||t==='启用'||t==='吊销'){
+        if(t==='启用'){
+          var r0=b.closest('tr');if(r0){r0.style.opacity='';b.textContent='停用'}
+          toast('已启用 '+name);return;
+        }
+        openMdl(t==='停用'?'停用仓库':'吊销密钥',
+          '<p style="font-size:12.5px;line-height:1.65;color:var(--tx-2)">即将'+(t==='停用'?'停用':'吊销')+' <b style="color:var(--tx)">'+name+'</b>。</p>'+
+          (t==='吊销'?'<div class="al warn" style="margin-top:12px"><span class="i">!</span><span>吊销后密钥立即失效，调用方需更换新密钥，此操作不可撤销。</span></div>'
+                     :'<div class="al warn" style="margin-top:12px"><span class="i">!</span><span>停用后该来源的技能在全平台不可用，运行中的任务将被终止。</span></div>'),
+          '<button class="tb sp" onclick="closeMdl()">取消</button><button class="tb" style="color:var(--err);border-color:#F0D2CF" onclick="doRow(\''+t+'\',\''+name.replace(/'/g,"")+'\')">确认'+t+'</button>');
+        return;
+      }
+
+      if(t==='调用'||t==='查看报告'){
+        openMdl(t==='调用'?'调用技能':'安全报告',
+          t==='调用'
+          ? '<div class="fld"><label>技能</label><input value="'+name+'" readonly></div>'+
+            '<div class="fld"><label>输入参数</label><textarea>{"channel":"wechat","date_range":"2026-09-01~2026-09-30"}</textarea></div>'+
+            '<div class="al ok"><span class="i">✓</span><span>权限声明校验通过，将在沙箱内执行，本地不落文件。</span></div>'
+          : '<div class="vrow"><span style="flex:1">签名校验</span><span style="color:var(--ok)">通过</span></div>'+
+            '<div class="vrow"><span style="flex:1">危险调用扫描</span><span style="color:var(--warn)">发现 2 处子进程调用</span></div>'+
+            '<div class="vrow"><span style="flex:1">权限声明</span><span style="color:var(--warn)">声明与行为不符</span></div>'+
+            '<div class="vrow"><span style="flex:1">来源可信度</span><span style="color:var(--err)">社区源 · 未审核</span></div>'+
+            '<div class="al warn" style="margin-top:12px"><span class="i">!</span><span>建议拒绝该技能，或要求作者移除子进程调用后重新提交。</span></div>',
+          '<button class="tb sp" onclick="closeMdl()">关闭</button>'+
+          (t==='调用'?'<button class="tb pri" onclick="closeMdl();toast(\'已在沙箱内执行，用时 2.1s\')">执行</button>'
+                     :'<button class="tb" style="color:var(--err);border-color:#F0D2CF" onclick="closeMdl();toast(\'已拒绝该技能\',\'warn\')">拒绝</button>'+
+                      '<button class="tb pri" onclick="closeMdl();toast(\'已通过审核\')">通过</button>'));
+        return;
+      }
+
+      if(t==='变更记录'||t==='版本'){versionModal();return}
+      if(t==='调试'){debugModal();return}
+      if(t==='AI 润色'){openPolish();return}
+      if(t==='⌘K'){go('chat');toast('已唤起全局问答');return}
+      if(t==='采纳'){
+        var p=$('#v-km .doc p:nth-child(2)');
+        if(p&&b.closest('#v-km'))p.textContent='平台统一采用 CPM 计价方式，按千次展示计费。在每次竞价过程中，系统会参考历史转化率动态调整出价。';
+        toast('已采纳润色结果，可随时还原');return;
+      }
+      if(t==='重新生成'){toast('已重新生成 1 版，用时 1.8s');return}
+      if(t==='更简洁'){toast('已按「更简洁」风格重新生成');return}
+      if(t==='正式'||t==='简洁'||t==='客观'||t==='通俗'){return}
+      if(t==='放弃'){
+        var c=b.closest('.card');if(c)c.style.opacity='.45';toast('已放弃本次润色，原文保留','warn');return}
+      if(t==='保存'){toast('配置已保存');return}
+      if(t==='发布'){
+        openMdl('发布新版本',
+          '<div class="fld"><label>版本号</label><input value="v1.5.0"></div>'+
+          '<div class="fld"><label>变更说明</label><textarea>新增 compare_period 参数支持环比对比</textarea></div>'+
+          '<div class="al ok"><span class="i">✓</span><span>静态检查通过，权限声明校验通过，可发布。</span></div>',
+          '<button class="tb sp" onclick="closeMdl()">取消</button><button class="tb pri" onclick="closeMdl();toast(\'v1.5.0 已发布，3 个成员引用已更新\')">确认发布</button>');
+        return;
+      }
+
+      if(['接入模型','创建','添加成员','添加仓库','添加','添加任务','新建任务'].indexOf(t)>-1){
+        var body=
+          t==='创建'
+          ? '<div class="fld"><label>密钥名称</label><input placeholder="例：ci-pipeline"></div>'+
+            '<div class="fld"><label>作用域</label><div class="chips"><span class="chip on">流程执行</span><span class="chip">成员对话</span><span class="chip">知识检索</span><span class="chip">技能调用</span></div></div>'+
+            '<div class="fld"><label>限流</label><select><option>60 次/分钟</option><option>300 次/分钟</option><option>不限</option></select></div>'+
+            '<div class="al warn"><span class="i">!</span><span>密钥仅创建时显示一次，请立即保存。</span></div>'
+          : t==='接入模型'
+          ? '<div class="fld"><label>厂商</label><select><option>Anthropic</option><option>OpenAI</option><option>DeepSeek</option><option>自托管</option></select></div>'+
+            '<div class="fld"><label>模型名称</label><input placeholder="例：claude-opus-4.5"></div>'+
+            '<div class="fld"><label>API Key</label><input type="password" placeholder="sk-…"></div>'+
+            '<div class="fld"><label>用途</label><div class="chips"><span class="chip on">复杂推理</span><span class="chip">日常执行</span><span class="chip">批处理</span></div></div>'
+          : t==='添加成员'
+          ? '<div class="fld"><label>成员类型</label><div class="chips"><span class="chip on">AI 成员</span><span class="chip">人类成员</span></div></div>'+
+            '<div class="fld"><label>名称</label><input placeholder="例：周报生成 Agent"></div>'+
+            '<div class="fld"><label>能力标签</label><input placeholder="例：报表 · 文档"></div>'+
+            '<div class="fld"><label>数据权限</label><select><option>运营组</option><option>数据分析项目</option><option>全部（只读）</option></select></div>'
+          : t==='添加仓库'
+          ? '<div class="fld"><label>仓库地址</label><input placeholder="https://git.example.com/skills.git"></div>'+
+            '<div class="fld"><label>类型</label><select><option>Git 仓库</option><option>HTTP 索引服务</option><option>内部制品库</option></select></div>'+
+            '<div class="fld"><label>信任等级</label><select><option>组织内（管理员审核）</option><option>官方（免审）</option><option>社区（人工审核 + 强制沙箱）</option></select></div>'
+          : t==='添加'&&b.closest('.topbar')
+          ? null
+          : '<div class="fld"><label>来源类型</label><div class="chips"><span class="chip on">Confluence</span><span class="chip">Notion</span></div></div>'+
+            '<div class="fld"><label>空间</label><input placeholder="选择或输入空间名"></div>'+
+            '<div class="fld"><label>同步周期</label><select><option>15 分钟</option><option>30 分钟</option><option>1 小时</option></select></div>'+
+            '<div class="fld"><label>权限</label><select><option>继承源端权限</option><option>平台内单独授权</option></select></div>';
+        if(t==='新建任务'||t==='添加任务'){newTaskModal();return}
+        if(body===null)return;
+        openMdl(t,body,
+          '<button class="tb sp" onclick="closeMdl()">取消</button><button class="tb pri" onclick="closeMdl();toast(\''+t+'已提交，处理中\')">确定</button>');
+        setTimeout(function(){chipPicker($('#mdlB'))},30);
+        return;
+      }
+      toast('「'+t.slice(0,14)+'」已触发');
+    });
+  });
+}
+function doRow(t,name){
+  if(t==='停用'){
+    var rows=$$('table tr');
+    rows.forEach(function(r){if(r.cells[0]&&r.cells[0].textContent.trim()===name){
+      var b=r.querySelector('button');if(b){b.textContent='启用';b.dataset.wired=''}
+      r.style.opacity='.5';
+    }});
+    closeMdl();toast('已停用 '+name,'warn');wireRows();
+  } else {
+    $$('table tr').forEach(function(r){if(r.cells[0]&&r.cells[0].textContent.trim()===name)r.remove()});
+    closeMdl();toast('已吊销密钥 '+name,'warn');
+  }
+}
+function versionModal(){
+  openMdl('变更记录',
+    '<div class="vrow"><span class="sd" style="background:var(--ok)"></span><div style="flex:1"><div>v1.4.0 · 已发布</div>'+
+    '<div style="font-size:11.5px;color:var(--tx-3);margin-top:2px">新增 compare_period 参数 · 张伟 · 09-28</div></div>'+
+    '<button class="tb sm" onclick="toast(\'已回滚到 v1.3.0\',\'warn\');closeMdl()">回滚</button></div>'+
+    '<div class="vrow"><span class="sd" style="background:var(--st-2)"></span><div style="flex:1"><div>v1.3.0 · 已下线</div>'+
+    '<div style="font-size:11.5px;color:var(--tx-3);margin-top:2px">修正字段映射错误 · 李明 · 09-12</div></div></div>'+
+    '<div class="vrow"><span class="sd" style="background:var(--st-2)"></span><div style="flex:1"><div>v1.2.0 · 已下线</div>'+
+    '<div style="font-size:11.5px;color:var(--tx-3);margin-top:2px">首次发布 · 张伟 · 08-30</div></div></div>',
+    '<button class="tb" onclick="closeMdl()">关闭</button>');
+}
+function debugModal(){
+  openMdl('调试运行',
+    '<div class="fld"><label>调试样例</label><select><option>channel=wechat, range=2026-09-01~09-30</option><option>channel=douyin, range=2026-09-01~09-30</option></select></div>'+
+    '<div class="vrow"><span style="flex:1">参数校验</span><span style="color:var(--ok)">通过</span><span style="color:var(--tx-3)">0.02s</span></div>'+
+    '<div class="vrow"><span style="flex:1">接口调用</span><span style="color:var(--ok)">返回 1,284 条</span><span style="color:var(--tx-3)">2.4s</span></div>'+
+    '<div class="vrow"><span style="flex:1">字段映射</span><span style="color:var(--ok)">4 → 4</span><span style="color:var(--tx-3)">0.11s</span></div>'+
+    '<div class="al ok" style="margin-top:10px"><span class="i">✓</span><span>输出符合 Schema，合计 2.53s，Token 1,240。</span></div>',
+    '<button class="tb sp" onclick="closeMdl()">关闭</button><button class="tb pri" onclick="closeMdl();toast(\'调试通过，用时 2.53s\')">运行调试</button>');
+}
+function openPolish(){
+  openMdl('AI 润色',
+    '<div class="fld"><label>润色范围</label><div class="chips"><span class="chip">选中内容</span><span class="chip on">当前段落</span><span class="chip">全文</span></div></div>'+
+    '<div class="fld"><label>目标风格</label><div class="chips"><span class="chip on">正式</span><span class="chip">简洁</span><span class="chip">客观</span><span class="chip">通俗</span></div></div>'+
+    '<div class="fld"><label>保护项</label><div class="bx on" style="margin:0"><span class="sdot on">✓</span>事实性数据与数字不改写</div>'+
+    '<div class="bx on" style="margin:5px 0 0"><span class="sdot on">✓</span>术语词库强制保留</div></div>'+
+    '<div class="al warn"><span class="i">!</span><span>润色结果可一键还原原文，不会覆盖历史版本。</span></div>',
+    '<button class="tb sp" onclick="closeMdl()">取消</button><button class="tb pri" onclick="closeMdl();toast(\'润色完成，已生成对比视图\')">开始润色</button>');
+  setTimeout(function(){$$('#mdlB .chip').forEach(function(c){c.addEventListener('click',function(){
+    $$('.chip',c.parentNode).forEach(function(x){x.classList.remove('on')});c.classList.add('on')})})},30);
+}
+/* 润色采纳已由 wireRows 统一处理 */
+
+wireRows();
+
+/* ═══════ 遗漏项补接 ═══════ */
+/* 工作区切换 */
+$$('.wsbtn').forEach(function(b){
+  b.addEventListener('click',function(e){e.stopPropagation();
+    openDD(b,[{lbl:'切换工作区'},{n:'AI-test',sel:true},{n:'数据平台'},{n:'官网运营'},{sep:1},{n:'管理工作区…',ic:'⚙'}]);
+    ddm.onclick=function(ev){var d=ev.target.closest('.ddi');if(!d)return;closeDD();
+      if(/管理/.test(d.textContent)){toast('打开工作区设置')}else{
+        b.childNodes[0].nodeValue=d.textContent.trim()+' ';
+        toast('已切换到工作区：'+d.textContent.trim());
+      }};
+  });
+});
+/* 搜索 */
+$$('.sbi').forEach(function(s){
+  s.addEventListener('click',function(e){e.stopPropagation();
+    openMdl('搜索',
+      '<div class="fld"><input id="gsrch" placeholder="搜索任务、技能、文档、成员…" autofocus></div>'+
+      '<div class="ddlbl" style="padding-left:0">最近</div>'+
+      '<div class="vrow" style="cursor:pointer"><span style="flex:1">渠道投放复盘报告</span><span style="color:var(--tx-3);font-size:11.5px">任务</span></div>'+
+      '<div class="vrow" style="cursor:pointer"><span style="flex:1">渠道数据拉取</span><span style="color:var(--tx-3);font-size:11.5px">技能</span></div>'+
+      '<div class="vrow" style="cursor:pointer"><span style="flex:1">投放规范 · 出价策略说明</span><span style="color:var(--tx-3);font-size:11.5px">文档</span></div>'+
+      '<div class="vrow" style="cursor:pointer"><span style="flex:1">日报生成 Agent</span><span style="color:var(--tx-3);font-size:11.5px">成员</span></div>',
+      '<button class="tb sp" onclick="closeMdl()">关闭</button><button class="tb pri" onclick="closeMdl();toast(\'已打开搜索结果\')">搜索</button>');
+    setTimeout(function(){var i=$('#gsrch');if(i)i.focus()},40);
+  });
+});
+/* 知识库 ⌘K 等已由 wireRows 统一处理 */
+/* 顶栏「全部/成员/看板」以外的杂项按钮兜底 */
+document.addEventListener('click',function(e){
+  var b=e.target.closest('button.tb,button.tbtn');
+  if(!b||b.dataset.wired||b.onclick||b.dataset.handled)return;
+  b.dataset.handled='1';
+},true);
+$$('button').forEach(function(b){
+  if(b.dataset.wired||b.getAttribute('onclick'))return;
+  if(b.closest('.clh')||b.closest('.cbar')||b.closest('.topbar')||b.closest('.ni')||
+     b.closest('.dw')||b.closest('.clist')||b.closest('.mnu')||b.closest('.mdl')||
+     b.closest('table')||b.closest('.chatb')||b.closest('.ch')||b.closest('.ws')||
+     b.closest('.sbox')||b.closest('.nav'))return;
+  b.dataset.wired='1';
+  b.addEventListener('click',function(e){e.stopPropagation();
+    var t=b.textContent.trim();
+    if(!t)return;
+    toast('「'+t.slice(0,14)+'」已触发');
+  });
+});
+
+/* ═══════ 键盘 ═══════ */
+document.addEventListener('keydown',function(e){
+  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();go('chat');toast('已打开会话，⌘K 快捷入口')}
+  if(e.key==='Escape'){cdw();closeMdl();closeDD();if(MNU)MNU.style.display='none'}
+});
+refreshCounts();
+</script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+- generic [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - complementary "主导航" [ref=f1e3]:
+      - generic [ref=f1e4]:
+        - generic [ref=f1e7]:
+          - strong [ref=f1e8]: 欢网 Buddy
+          - generic [ref=f1e9]: AI WORKSPACE
+        - button "收起导航" [ref=f1e10] [cursor=pointer]
+      - generic [ref=f1e13]:
+        - button "新建任务 ⌘ K" [ref=f1e14] [cursor=pointer]:
+          - generic [ref=f1e17]: 新建任务
+          - generic [ref=f1e18]: ⌘ K
+        - generic [ref=f1e19]: 工作台
+        - navigation [ref=f1e20]:
+          - button "首页" [ref=f1e21] [cursor=pointer]
+          - button "助理 2" [ref=f1e25] [cursor=pointer]:
+            - generic [ref=f1e28]: 助理
+            - generic [ref=f1e29]: "2"
+          - button "项目" [ref=f1e30] [cursor=pointer]
+          - button "任务看板" [ref=f1e34] [cursor=pointer]
+          - button "AI 成员" [ref=f1e38] [cursor=pointer]
+          - button "专家 · 技能 · 连接器" [ref=f1e42] [cursor=pointer]
+          - button "定时任务" [ref=f1e46] [cursor=pointer]
+          - button "资料库" [active] [ref=f1e50] [cursor=pointer]
+          - button "模型与安全" [ref=f1e54] [cursor=pointer]
+        - generic [ref=f1e59]:
+          - generic [ref=f1e60]: 最近任务
+          - button "新建任务" [ref=f1e61] [cursor=pointer]
+        - generic [ref=f1e64]:
+          - button "生成 9 月渠道投放复盘周报" [ref=f1e906] [cursor=pointer]
+          - button "检查 OTT 素材合规风险" [ref=f1e909] [cursor=pointer]
+          - button "整理平台产品需求评审记录" [ref=f1e912] [cursor=pointer]
+        - generic [ref=f1e75]:
+          - generic [ref=f1e76]: 空间
+          - button "查看项目" [ref=f1e77] [cursor=pointer]
+        - button "欢网 · 平台产品组 03" [ref=f1e80] [cursor=pointer]:
+          - text: 欢网 · 平台产品组
+          - generic [ref=f1e82]: "03"
+      - generic [ref=f1e83]:
+        - button "消息中心" [ref=f1e84] [cursor=pointer]
+        - button "张 张伟 空间管理员" [ref=f1e88] [cursor=pointer]:
+          - generic [ref=f1e89]: 张
+          - generic [ref=f1e90]:
+            - strong [ref=f1e91]: 张伟
+            - generic [ref=f1e92]: 空间管理员
+    - generic [ref=f1e95]:
+      - banner [ref=f1e96]:
+        - generic [ref=f1e100]:
+          - generic [ref=f1e101]: 欢网科技
+          - strong [ref=f1e104]: 资料库
+        - generic [ref=f1e105]:
+          - generic [ref=f1e524]: 交互原型
+          - button "搜索任务与资料" [ref=f1e106] [cursor=pointer]:
+            - generic [ref=f1e526]: 搜索
+            - generic [ref=f1e527]: ⌘ F
+          - button "查看消息" [ref=f1e109] [cursor=pointer]
+          - generic "张伟" [ref=f1e528]: 张
+      - main [ref=f1e113]:
+        - generic [ref=f1e915]:
+          - generic [ref=f1e916]:
+            - generic [ref=f1e917]:
+              - generic [ref=f1e918]: 知识与文件
+              - heading "资料库" [level=1] [ref=f1e921]
+              - paragraph [ref=f1e922]: 统一管理团队文档、工作资料和 AI 任务产物。
+            - button "添加资料" [ref=f1e923] [cursor=pointer]
+          - generic [ref=f1e926]:
+            - generic [ref=f1e927]:
+              - button "全部资料" [ref=f1e928] [cursor=pointer]
+              - button "团队空间" [ref=f1e929] [cursor=pointer]
+              - button "我的文档" [ref=f1e930] [cursor=pointer]
+            - searchbox [ref=f1e934]
+          - generic [ref=f1e935]:
+            - button "团队空间 投放运营规范 素材规范、渠道投放与复核流程 6 篇文档 · 今天更新" [ref=f1e936] [cursor=pointer]:
+              - generic [ref=f1e937]: 团队空间
+              - heading "投放运营规范" [level=3] [ref=f1e942]
+              - paragraph [ref=f1e943]: 素材规范、渠道投放与复核流程
+              - generic [ref=f1e944]: 6 篇文档 · 今天更新
+            - button "团队空间 增长方法论 转化分析、增长实验与复盘模板 4 篇文档 · 昨天更新" [ref=f1e948] [cursor=pointer]:
+              - generic [ref=f1e949]: 团队空间
+              - heading "增长方法论" [level=3] [ref=f1e954]
+              - paragraph [ref=f1e955]: 转化分析、增长实验与复盘模板
+              - generic [ref=f1e956]: 4 篇文档 · 昨天更新
+            - button "团队空间 平台产品文档 PRD、架构和交付手册 8 篇文档 · 10 月 15 日更新" [ref=f1e960] [cursor=pointer]:
+              - generic [ref=f1e961]: 团队空间
+              - heading "平台产品文档" [level=3] [ref=f1e966]
+              - paragraph [ref=f1e967]: PRD、架构和交付手册
+              - generic [ref=f1e968]: 8 篇文档 · 10 月 15 日更新
+            - button "我的文档 9 月渠道投放复盘.md 由 AI·数据分析师生成的示例产物 24 KB · 今天生成" [ref=f1e972] [cursor=pointer]:
+              - generic [ref=f1e973]: 我的文档
+              - heading "9 月渠道投放复盘.md" [level=3] [ref=f1e978]
+              - paragraph [ref=f1e979]: 由 AI·数据分析师生成的示例产物
+              - generic [ref=f1e980]: 24 KB · 今天生成
+  - status

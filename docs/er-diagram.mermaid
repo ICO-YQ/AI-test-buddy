@@ -1,0 +1,39 @@
+erDiagram
+  workspace ||--o{ board_column : "含"
+  workspace ||--o{ member : "含"
+  workspace ||--o{ task : "含"
+  workspace ||--o{ session : "含"
+  workspace ||--o{ skill : "含"
+  workspace ||--o{ kb_space : "含"
+  workspace ||--o{ api_key : "含"
+  workspace ||--o{ usage_record : "含"
+
+  member ||--o| agent_config : "AI 配置"
+  member ||--o{ member : "创建(权限上限)"
+  member ||--o{ task : "创建/被指派"
+  member ||--o{ task_activity : "主体/发起人"
+  member ||--o{ message : "发言"
+  member ||--o{ notification : "接收"
+  member ||--o{ api_key : "持有"
+
+  task ||--o{ task_activity : "轨迹"
+  task ||--o{ artifact : "交付物"
+  task ||--o{ skill_execution : "触发"
+
+  session ||--o{ message : "消息"
+
+  model_config ||--o{ scene_route : "路由"
+  model_config ||--o{ agent_config : "主力/备用"
+  model_config ||--o{ model_degradation_log : "降级"
+
+  skill ||--o{ skill_version : "版本"
+  skill_version ||--o{ skill_permission : "权限声明"
+  hub_skill ||--o| skill : "来源"
+  hub_repo ||--o{ hub_skill : "索引"
+
+  kb_space ||--o{ kb_document : "文档"
+  kb_space ||--o{ kb_sync_source : "同步源"
+  kb_space ||--o{ kb_chunk : "块"
+  kb_document ||--o{ kb_doc_version : "版本"
+  kb_document ||--o{ kb_chunk : "切块"
+  kb_query_log }o--|| member : "提问者"

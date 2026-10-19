@@ -1,0 +1,207 @@
+classDiagram
+  direction LR
+
+  %% ═══ 横切内核 ═══
+  class Db {
+    <<interface>>
+    +all(sql, params) ResultList
+    +get(sql, params) ResultOne
+    +run(sql, params) RunResult
+    +exec(sql) void
+    +tx(fn) T
+  }
+  class ResponseKit {
+    +ok(data) ApiResponse
+    +fail(code, msg) ApiError
+  }
+  class AuditService {
+    +write(entry) void
+    +failBlocks() void
+  }
+  class PermissionService {
+    +computeEffective(agent, creator) ScopeList
+    +assertScope(memberId, scope) void
+  }
+  class StateMachine {
+    +can(from, to) boolean
+    +assert(from, to) void
+  }
+  class Metrics {
+    +emit(event, props) void
+  }
+  class TraceContext {
+    +current() string
+    +run(traceId, fn) T
+  }
+
+  %% ═══ AI 模拟层（可替换点） ═══
+  class AiExecutor {
+    <<interface>>
+    +execute(task, agent) ExecutionTrace
+  }
+  class MockExecutor
+  class Sandbox {
+    <<interface>>
+    +run(script, perms, limits) SandboxResult
+  }
+  class MockSandbox
+  class StaticCheck {
+    +scan(script) CheckResult
+  }
+  class ModelGateway {
+    <<interface>>
+    +complete(scene, prompt, ctx) ModelResult
+  }
+  class MockModelGateway
+  class Retriever {
+    <<interface>>
+    +search(query, allowedSpaces) ChunkList
+  }
+  class MockRetriever
+  class HubClient {
+    <<interface>>
+    +fetchMetadata(skill) HubMeta
+  }
+  class MockHubClient
+
+  %% ═══ 业务服务 ═══
+  class TaskService {
+    +list(filters) TaskList
+    +create(req, actor) Task
+    +update(id, req) Task
+    +assign(id, assigneeId, lockVersion) Task
+    +transition(id, to, lock) Task
+    +accept(id, decision, reason) Task
+    +activities(id) ActivityList
+    +metrics() TaskMetrics
+  }
+  class MemberService {
+    +list(type) MemberList
+    +create(req) Member
+    +effectivePermissions(id) EffectivePermission
+    +updateAgentConfig(id, cfg) AgentConfig
+  }
+  class SkillService {
+    +list(filters) SkillList
+    +createVersion(id, req) SkillVersion
+    +validate(id, versionId) ValidateResult
+    +publish(id, ver) SkillVersion
+    +offline(id, ver) SkillVersion
+    +impact(id, ver) ImpactAnalysis
+    +rollback(id, toVersion) SkillVersion
+    +execute(id, versionId, input) SkillExecutionResult
+  }
+  class HubService {
+    +listRepos() RepoList
+    +registerRepo(req) HubRepo
+    +sync(repoId) SyncResult
+    +listSkills(filters) HubSkillList
+    +load(skillId) LoadResult
+    +disable(skillId) void
+  }
+  class KbService {
+    +listSpaces() SpaceList
+    +createDoc(req) KbDocument
+    +saveDoc(id, req) KbDocument
+    +rollback(id, ver) KbDocument
+    +polish(id, scope, action) PolishResult
+    +query(query, scope, topK) QueryResult
+    +feedback(queryId, fb) void
+    +syncSource(sourceId) SyncResult
+  }
+  class ChatService {
+    +listSessions(ws) SessionList
+    +createSession(req) Session
+    +sendMessage(sessionId, content) Messages
+    +switchModel(sessionId, modelId) Session
+    +editMessage(id, content) Message
+    +deleteMessage(id) void
+  }
+  class ModelService {
+    +listModels() ModelList
+    +routes() RouteList
+    +setRoutes(routes) RouteList
+    +degradations() DegradationList
+  }
+  class ApiKeyService {
+    +issue(req) IssuedKey
+    +revoke(id) ApiKey
+    +verifySignature(req) boolean
+  }
+  class NotificationService {
+    +inbox(memberId) NotificationList
+  }
+
+  %% ═══ 数据实体 ═══
+  class Workspace { +id +name +createdAt }
+  class BoardColumn { +id +key +label +colorVar +sortOrder }
+  class Member { +id +type +name +role +capabilityTags +dataScope +creatorId }
+  class AgentConfig { +memberId +rolePrompt +declaredScope +contextBudget +quotaMonthly +grayRatio }
+  class Task { +id +code +status +priority +assigneeId +assigneeType +slaDueAt +lockVersion }
+  class TaskActivity { +id +type +actorId +initiatorId +reasonCode +traceId }
+  class Artifact { +id +code +type +uri +submittedBy }
+  class Session { +id +title +agentId +modelId +kbSpaceId }
+  class Message { +id +role +content +blocks +citations +tokenIn +tokenOut }
+  class ModelConfig { +id +name +vendor +priority +health }
+  class SceneRoute { +id +scene +primaryModelId +fallbackModelId }
+  class ModelDegradationLog { +id +event +action }
+  class Skill { +id +slug +status +trustLevel +currentVersion }
+  class SkillVersion { +id +version +status +staticCheck +rollbackFrom }
+  class SkillPermission { +id +capability +granted +detail }
+  class SkillExecution { +id +sandboxId +status +blockReason +localFiles }
+  class HubRepo { +id +url +type +trustLevel +signatureRequired }
+  class HubSkill { +id +version +reviewStatus +signatureOk }
+  class KbSpace { +id +name +acl }
+  class KbDocument { +id +spaceId +title +content +source +deleted }
+  class KbDocVersion { +id +version +content +polishMeta }
+  class KbSyncSource { +id +sourceType +intervalMin +mirrorOnly }
+  class KbQueryLog { +id +query +insufficient +feedback }
+  class AuditLog { +id +traceId +actorId +initiatorId +action +result }
+  class ApiKey { +id +name +keyHash +scopes +rateLimitPerMin }
+  class UsageRecord { +id +category +tokenIn +tokenOut +cost +project }
+
+  %% ═══ 关系 ═══
+  ResponseKit ..> Db
+  TaskService ..> StateMachine
+  TaskService ..> PermissionService
+  TaskService ..> AuditService
+  TaskService --> Task
+  TaskService --> TaskActivity
+  TaskService --> Artifact
+  TaskService ..> AiExecutor
+  MemberService ..> PermissionService
+  MemberService --> Member
+  MemberService --> AgentConfig
+  SkillService ..> StaticCheck
+  SkillService ..> Sandbox
+  SkillService ..> AuditService
+  SkillService --> Skill
+  SkillService --> SkillVersion
+  SkillVersion --> SkillPermission
+  HubService ..> HubClient
+  HubService --> HubRepo
+  HubService --> HubSkill
+  KbService ..> Retriever
+  KbService ..> ModelGateway
+  KbService --> KbSpace
+  KbService --> KbDocument
+  KbDocument --> KbDocVersion
+  KbService --> KbSyncSource
+  KbService --> KbQueryLog
+  ChatService ..> ModelGateway
+  ChatService --> Session
+  Session --> Message
+  ModelService --> ModelConfig
+  ModelService --> SceneRoute
+  ModelService --> ModelDegradationLog
+  ApiKeyService --> ApiKey
+  ApiKeyService ..> AuditService
+  AiExecutor <|.. MockExecutor
+  Sandbox <|.. MockSandbox
+  ModelGateway <|.. MockModelGateway
+  Retriever <|.. MockRetriever
+  HubClient <|.. MockHubClient
+  AuditService --> AuditLog
+  Metrics --> UsageRecord
+  Member --> AgentConfig
+  Task --> TaskActivity

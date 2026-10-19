@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#E85415">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%23e85415'/%3E%3Ccircle cx='29' cy='36' r='16' fill='none' stroke='white' stroke-width='9'/%3E%3Ccircle cx='46' cy='17' r='10' fill='%23ffc857'/%3E%3C/svg%3E">
+  <title>欢网 Buddy · WorkBuddy 风格交互原型</title>
+  <link rel="stylesheet" href="./prototype-workbuddy-huan.css">
+  <script defer src="./prototype-workbuddy-huan.js"></script>
+</head>
+<body>
+  <svg class="icon-defs" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 2 1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2Z"/><path d="m19 16 .8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8L19 16Z"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V10Z"/><path d="M9 21v-7h6v7"/></symbol>
+    <symbol id="i-message" viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 9 9 0 0 1-4-.9L3 21l1.9-5.5a9 9 0 0 1-.9-4A8.5 8.5 0 0 1 12.5 3 8.5 8.5 0 0 1 21 11.5Z"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></symbol>
+    <symbol id="i-team" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2H3ZM17 5a3 3 0 0 1 0 6M17 14a5 5 0 0 1 4 5v1h-4"/></symbol>
+    <symbol id="i-box" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><path d="M17 13v8m-4-4h8"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v18H6.5A2.5 2.5 0 0 0 4 22V4.5ZM4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="m12 2 8 3v6c0 5.5-3.4 9-8 11-4.6-2-8-5.5-8-11V5l8-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="m12 19 0-14m-6 6 6-6 6 6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 8-3 8-3 10h18c0-2-3-2-3-10ZM10 21h4"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="2" fill="currentColor" stroke="none"/><circle cx="16" cy="12" r="2" fill="currentColor" stroke="none"/><circle cx="10" cy="18" r="2" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-clip" viewBox="0 0 24 24"><path d="m8 12 6.5-6.5a4 4 0 0 1 5.7 5.7l-8.7 8.7a6 6 0 0 1-8.5-8.5l8.3-8.3"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 2h8l5 5v15H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/><path d="M14 2v6h5M8 13h7M8 17h7"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V4M4 20h17M8 16v-4M13 16V7M18 16v-7"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m3 17 5-5 4 4 3-3 6 6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M5 5 19 19M19 5 5 19"/></symbol>
+    <symbol id="i-panel" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M15 3v18"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 8 1l2-2a5 5 0 0 0-7-7l-2 2M14 11a5 5 0 0 0-8-1l-2 2a5 5 0 0 0 7 7l2-2"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.6" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7V5Z"/></symbol>
+    <symbol id="i-zap" viewBox="0 0 24 24"><path d="m13 2-9 11h7l-1 9 10-12h-7l0-8Z"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v7c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12v7c0 1.7 3.6 3 8 3s8-1.3 8-3v-7"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+  </svg>
+
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="主导航">
+      <div class="brand-row">
+        <span class="brand-symbol" aria-hidden="true"><span class="brand-sun"></span></span>
+        <span class="brand-copy"><strong>欢网 Buddy</strong><small>AI WORKSPACE</small></span>
+        <button class="icon-button sidebar-collapse" id="sidebarClose" title="收起导航" aria-label="收起导航"><svg><use href="#i-menu"/></svg></button>
+      </div>
+
+      <div class="sidebar-scroll">
+        <button class="new-task-button" data-action="new-task"><svg><use href="#i-plus"/></svg><span>新建任务</span><kbd>⌘ K</kbd></button>
+        <div class="nav-section-label">工作台</div>
+        <nav class="primary-nav" id="primaryNav">
+          <button class="nav-item active" data-page="home"><svg><use href="#i-home"/></svg><span>首页</span></button>
+          <button class="nav-item" data-page="assistant"><svg><use href="#i-message"/></svg><span>助理</span><span class="nav-badge">2</span></button>
+          <button class="nav-item" data-page="projects"><svg><use href="#i-grid"/></svg><span>项目</span></button>
+          <button class="nav-item" data-page="board"><svg><use href="#i-target"/></svg><span>任务看板</span></button>
+          <button class="nav-item" data-page="members"><svg><use href="#i-team"/></svg><span>AI 成员</span></button>
+          <button class="nav-item" data-page="extensions"><svg><use href="#i-box"/></svg><span>专家 · 技能 · 连接器</span></button>
+          <button class="nav-item" data-page="schedule"><svg><use href="#i-clock"/></svg><span>定时任务</span></button>
+          <button class="nav-item" data-page="library"><svg><use href="#i-book"/></svg><span>资料库</span></button>
+          <button class="nav-item" data-page="governance"><svg><use href="#i-shield"/></svg><span>模型与安全</span></button>
+        </nav>
+        <div class="sidebar-divider"></div>
+        <div class="section-heading"><span>最近任务</span><button class="small-icon-button" data-action="new-task" aria-label="新建任务"><svg><use href="#i-plus"/></svg></button></div>
+        <div id="recentTaskNav" class="recent-task-nav"></div>
+        <div class="sidebar-divider"></div>
+        <div class="section-heading"><span>空间</span><button class="small-icon-button" data-page="projects" aria-label="查看项目"><svg><use href="#i-right"/></svg></button></div>
+        <button class="space-row" data-page="projects"><span class="space-dot"></span>欢网 · 平台产品组<span class="space-count">03</span></button>
+      </div>
+
+      <div class="sidebar-footer">
+        <button class="footer-link" id="notificationButton"><svg><use href="#i-bell"/></svg>消息中心<span class="notification-dot"></span></button>
+        <button class="profile-button" id="profileButton" aria-haspopup="true" aria-expanded="false"><span class="avatar avatar-user">张</span><span class="profile-copy"><strong>张伟</strong><small>空间管理员</small></span><svg><use href="#i-more"/></svg></button>
+      </div>
+    </aside>
+
+    <div class="main-shell">
+      <header class="topbar">
+        <button class="icon-button mobile-menu" id="sidebarOpen" title="打开导航" aria-label="打开导航"><svg><use href="#i-menu"/></svg></button>
+        <div class="breadcrumb"><span>欢网科技</span><svg><use href="#i-right"/></svg><strong id="breadcrumbCurrent">工作台</strong></div>
+        <div class="topbar-actions">
+          <span class="prototype-pill"><span></span>交互原型</span>
+          <button class="top-action search-trigger" id="searchButton" aria-label="搜索任务与资料"><svg><use href="#i-search"/></svg><span>搜索</span><kbd>⌘ F</kbd></button>
+          <button class="icon-button top-icon" id="topBellButton" aria-label="查看消息"><svg><use href="#i-bell"/></svg><span class="tiny-dot"></span></button>
+          <span class="avatar avatar-user top-avatar" title="张伟">张</span>
+        </div>
+      </header>
+
+      <main id="mainContent" class="main-content" tabindex="-1"></main>
+    </div>
+  </div>
+
+  <div class="mobile-scrim" id="mobileScrim"></div>
+  <div class="toast-region" id="toastRegion" role="status" aria-live="polite"></div>
+  <div class="popover" id="profileMenu" hidden>
+    <div class="popover-title">欢网 · 平台产品组</div>
+    <button data-page="governance"><svg><use href="#i-sliders"/></svg>模型与安全设置</button>
+    <button data-page="library"><svg><use href="#i-book"/></svg>资料库管理</button>
+    <div class="popover-note">原型演示 · 不连接真实服务</div>
+  </div>
+
+  <dialog id="modal" class="modal"><form method="dialog"><button class="modal-close icon-button" value="cancel" aria-label="关闭"><svg><use href="#i-close"/></svg></button><div id="modalContent"></div></form></dialog>
+</body>
+</html>

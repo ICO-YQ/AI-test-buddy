@@ -1,0 +1,100 @@
+- generic [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - complementary "主导航" [ref=f1e3]:
+      - generic [ref=f1e4]:
+        - generic [ref=f1e7]:
+          - strong [ref=f1e8]: 欢网 Buddy
+          - generic [ref=f1e9]: AI WORKSPACE
+        - button "收起导航" [ref=f1e10] [cursor=pointer]
+      - generic [ref=f1e13]:
+        - button "新建任务 ⌘ K" [ref=f1e14] [cursor=pointer]:
+          - generic [ref=f1e17]: 新建任务
+          - generic [ref=f1e18]: ⌘ K
+        - generic [ref=f1e19]: 工作台
+        - navigation [ref=f1e20]:
+          - button "首页" [ref=f1e21] [cursor=pointer]
+          - button "助理 2" [ref=f1e25] [cursor=pointer]:
+            - generic [ref=f1e28]: 助理
+            - generic [ref=f1e29]: "2"
+          - button "项目" [active] [ref=f1e30] [cursor=pointer]
+          - button "任务看板" [ref=f1e34] [cursor=pointer]
+          - button "AI 成员" [ref=f1e38] [cursor=pointer]
+          - button "专家 · 技能 · 连接器" [ref=f1e42] [cursor=pointer]
+          - button "定时任务" [ref=f1e46] [cursor=pointer]
+          - button "资料库" [ref=f1e50] [cursor=pointer]
+          - button "模型与安全" [ref=f1e54] [cursor=pointer]
+        - generic [ref=f1e59]:
+          - generic [ref=f1e60]: 最近任务
+          - button "新建任务" [ref=f1e61] [cursor=pointer]
+        - generic [ref=f1e64]:
+          - button "生成 9 月渠道投放复盘周报" [ref=f1e578] [cursor=pointer]
+          - button "检查 OTT 素材合规风险" [ref=f1e581] [cursor=pointer]
+          - button "整理平台产品需求评审记录" [ref=f1e584] [cursor=pointer]
+        - generic [ref=f1e75]:
+          - generic [ref=f1e76]: 空间
+          - button "查看项目" [ref=f1e77] [cursor=pointer]
+        - button "欢网 · 平台产品组 03" [ref=f1e80] [cursor=pointer]:
+          - text: 欢网 · 平台产品组
+          - generic [ref=f1e82]: "03"
+      - generic [ref=f1e83]:
+        - button "消息中心" [ref=f1e84] [cursor=pointer]
+        - button "张 张伟 空间管理员" [ref=f1e88] [cursor=pointer]:
+          - generic [ref=f1e89]: 张
+          - generic [ref=f1e90]:
+            - strong [ref=f1e91]: 张伟
+            - generic [ref=f1e92]: 空间管理员
+    - generic [ref=f1e95]:
+      - banner [ref=f1e96]:
+        - generic [ref=f1e100]:
+          - generic [ref=f1e101]: 欢网科技
+          - strong [ref=f1e104]: 项目
+        - generic [ref=f1e105]:
+          - generic [ref=f1e524]: 交互原型
+          - button "搜索任务与资料" [ref=f1e106] [cursor=pointer]:
+            - generic [ref=f1e526]: 搜索
+            - generic [ref=f1e527]: ⌘ F
+          - button "查看消息" [ref=f1e109] [cursor=pointer]
+          - generic "张伟" [ref=f1e528]: 张
+      - main [ref=f1e113]:
+        - generic [ref=f1e587]:
+          - generic [ref=f1e588]:
+            - generic [ref=f1e589]:
+              - generic [ref=f1e590]: 团队协作
+              - heading "项目" [level=1] [ref=f1e593]
+              - paragraph [ref=f1e594]: 将任务、AI 成员与产物归集到统一空间。
+            - button "新建项目" [ref=f1e595] [cursor=pointer]
+          - generic [ref=f1e598]:
+            - button "72% 智能大屏增长计划 渠道投放、效果分析和素材协同 12 项任务 · 3 位 AI 成员" [ref=f1e599] [cursor=pointer]:
+              - generic [ref=f1e600]: 72%
+              - heading "智能大屏增长计划" [level=3] [ref=f1e605]
+              - paragraph [ref=f1e606]: 渠道投放、效果分析和素材协同
+              - generic [ref=f1e609]: 12 项任务 · 3 位 AI 成员
+            - button "54% OTT 素材合规专项 素材检查、风险复核与规范更新 8 项任务 · 2 位 AI 成员" [ref=f1e613] [cursor=pointer]:
+              - generic [ref=f1e614]: 54%
+              - heading "OTT 素材合规专项" [level=3] [ref=f1e619]
+              - paragraph [ref=f1e620]: 素材检查、风险复核与规范更新
+              - generic [ref=f1e623]: 8 项任务 · 2 位 AI 成员
+            - button "86% 欢网 AI 平台建设 产品研发、知识沉淀和交付验收 16 项任务 · 4 位成员" [ref=f1e627] [cursor=pointer]:
+              - generic [ref=f1e628]: 86%
+              - heading "欢网 AI 平台建设" [level=3] [ref=f1e633]
+              - paragraph [ref=f1e634]: 产品研发、知识沉淀和交付验收
+              - generic [ref=f1e637]: 16 项任务 · 4 位成员
+          - generic [ref=f1e641]:
+            - heading "跨项目任务" [level=2] [ref=f1e642]
+            - generic [ref=f1e643]:
+              - button "生成 9 月渠道投放复盘周报 AI·数据分析师 · 今天 10:42 已完成" [ref=f1e644] [cursor=pointer]:
+                - generic [ref=f1e648]:
+                  - strong [ref=f1e649]: 生成 9 月渠道投放复盘周报
+                  - generic [ref=f1e650]: AI·数据分析师 · 今天 10:42
+                - generic [ref=f1e651]: 已完成
+              - button "检查 OTT 素材合规风险 AI·质量巡检 · 今天 09:18 待审核" [ref=f1e654] [cursor=pointer]:
+                - generic [ref=f1e658]:
+                  - strong [ref=f1e659]: 检查 OTT 素材合规风险
+                  - generic [ref=f1e660]: AI·质量巡检 · 今天 09:18
+                - generic [ref=f1e661]: 待审核
+              - button "整理平台产品需求评审记录 AI·投放文案 · 昨天 16:35 进行中" [ref=f1e664] [cursor=pointer]:
+                - generic [ref=f1e668]:
+                  - strong [ref=f1e669]: 整理平台产品需求评审记录
+                  - generic [ref=f1e670]: AI·投放文案 · 昨天 16:35
+                - generic [ref=f1e671]: 进行中
+  - status

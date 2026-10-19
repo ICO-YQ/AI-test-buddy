@@ -1,0 +1,24 @@
+// vitest.config.ts
+import { defineConfig } from "file:///Users/zhangyiqing/Documents/AI-test-Project/huanbuddy/node_modules/.pnpm/vitest@2.1.2_@types+node@22.20.5/node_modules/vitest/dist/config.js";
+var vitest_config_default = defineConfig({
+  test: {
+    environment: "node",
+    include: ["src/**/*.test.ts"],
+    // 测试统一使用内存库 + node:sqlite 驱动，避免污染开发数据库
+    env: {
+      DB_PATH: ":memory:",
+      DB_DRIVER: "node",
+      LOG_REQUESTS: "0",
+      LOG_PRETTY: "0",
+      AUTO_MIGRATE: "0",
+      AUTO_SEED: "0"
+    },
+    setupFiles: ["./src/__tests__/setup.ts"],
+    testTimeout: 2e4,
+    hookTimeout: 2e4
+  }
+});
+export {
+  vitest_config_default as default
+};
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsidml0ZXN0LmNvbmZpZy50cyJdLAogICJzb3VyY2VzQ29udGVudCI6IFsiY29uc3QgX192aXRlX2luamVjdGVkX29yaWdpbmFsX2Rpcm5hbWUgPSBcIi9Vc2Vycy96aGFuZ3lpcWluZy9Eb2N1bWVudHMvQUktdGVzdC1Qcm9qZWN0L2h1YW5idWRkeS9hcHBzL3NlcnZlclwiO2NvbnN0IF9fdml0ZV9pbmplY3RlZF9vcmlnaW5hbF9maWxlbmFtZSA9IFwiL1VzZXJzL3poYW5neWlxaW5nL0RvY3VtZW50cy9BSS10ZXN0LVByb2plY3QvaHVhbmJ1ZGR5L2FwcHMvc2VydmVyL3ZpdGVzdC5jb25maWcudHNcIjtjb25zdCBfX3ZpdGVfaW5qZWN0ZWRfb3JpZ2luYWxfaW1wb3J0X21ldGFfdXJsID0gXCJmaWxlOi8vL1VzZXJzL3poYW5neWlxaW5nL0RvY3VtZW50cy9BSS10ZXN0LVByb2plY3QvaHVhbmJ1ZGR5L2FwcHMvc2VydmVyL3ZpdGVzdC5jb25maWcudHNcIjtpbXBvcnQgeyBkZWZpbmVDb25maWcgfSBmcm9tICd2aXRlc3QvY29uZmlnJztcblxuZXhwb3J0IGRlZmF1bHQgZGVmaW5lQ29uZmlnKHtcbiAgdGVzdDoge1xuICAgIGVudmlyb25tZW50OiAnbm9kZScsXG4gICAgaW5jbHVkZTogWydzcmMvKiovKi50ZXN0LnRzJ10sXG4gICAgLy8gXHU2RDRCXHU4QkQ1XHU3RURGXHU0RTAwXHU0RjdGXHU3NTI4XHU1MTg1XHU1QjU4XHU1RTkzICsgbm9kZTpzcWxpdGUgXHU5QTcxXHU1MkE4XHVGRjBDXHU5MDdGXHU1MTREXHU2QzYxXHU2N0QzXHU1RjAwXHU1M0QxXHU2NTcwXHU2MzZFXHU1RTkzXG4gICAgZW52OiB7XG4gICAgICBEQl9QQVRIOiAnOm1lbW9yeTonLFxuICAgICAgREJfRFJJVkVSOiAnbm9kZScsXG4gICAgICBMT0dfUkVRVUVTVFM6ICcwJyxcbiAgICAgIExPR19QUkVUVFk6ICcwJyxcbiAgICAgIEFVVE9fTUlHUkFURTogJzAnLFxuICAgICAgQVVUT19TRUVEOiAnMCcsXG4gICAgfSxcbiAgICBzZXR1cEZpbGVzOiBbJy4vc3JjL19fdGVzdHNfXy9zZXR1cC50cyddLFxuICAgIHRlc3RUaW1lb3V0OiAyMDAwMCxcbiAgICBob29rVGltZW91dDogMjAwMDAsXG4gIH0sXG59KTtcbiJdLAogICJtYXBwaW5ncyI6ICI7QUFBNFgsU0FBUyxvQkFBb0I7QUFFelosSUFBTyx3QkFBUSxhQUFhO0FBQUEsRUFDMUIsTUFBTTtBQUFBLElBQ0osYUFBYTtBQUFBLElBQ2IsU0FBUyxDQUFDLGtCQUFrQjtBQUFBO0FBQUEsSUFFNUIsS0FBSztBQUFBLE1BQ0gsU0FBUztBQUFBLE1BQ1QsV0FBVztBQUFBLE1BQ1gsY0FBYztBQUFBLE1BQ2QsWUFBWTtBQUFBLE1BQ1osY0FBYztBQUFBLE1BQ2QsV0FBVztBQUFBLElBQ2I7QUFBQSxJQUNBLFlBQVksQ0FBQywwQkFBMEI7QUFBQSxJQUN2QyxhQUFhO0FBQUEsSUFDYixhQUFhO0FBQUEsRUFDZjtBQUNGLENBQUM7IiwKICAibmFtZXMiOiBbXQp9Cg==

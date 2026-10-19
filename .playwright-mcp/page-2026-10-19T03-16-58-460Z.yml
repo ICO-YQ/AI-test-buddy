@@ -1,0 +1,105 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary "主导航" [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e7]:
+          - strong [ref=e8]: 欢网 Buddy
+          - generic [ref=e9]: AI WORKSPACE
+        - button "收起导航" [ref=e10] [cursor=pointer]
+      - generic [ref=e13]:
+        - button "新建任务 ⌘ K" [ref=e14] [cursor=pointer]:
+          - generic [ref=e17]: 新建任务
+          - generic [ref=e18]: ⌘ K
+        - generic [ref=e19]: 工作台
+        - navigation [ref=e20]:
+          - button "首页" [ref=e21] [cursor=pointer]
+          - button "助理 2" [ref=e25] [cursor=pointer]:
+            - generic [ref=e28]: 助理
+            - generic [ref=e29]: "2"
+          - button "项目" [ref=e30] [cursor=pointer]
+          - button "任务看板" [ref=e34] [cursor=pointer]
+          - button "AI 成员" [ref=e38] [cursor=pointer]
+          - button "专家 · 技能 · 连接器" [ref=e42] [cursor=pointer]
+          - button "定时任务" [ref=e46] [cursor=pointer]
+          - button "资料库" [ref=e50] [cursor=pointer]
+          - button "模型与安全" [ref=e54] [cursor=pointer]
+        - generic [ref=e59]:
+          - generic [ref=e60]: 最近任务
+          - button "新建任务" [ref=e61] [cursor=pointer]
+        - generic [ref=e64]:
+          - button "请根据本周渠道投放数据，生成一份可交付的运营周报" [ref=e515] [cursor=pointer]
+          - button "生成 9 月渠道投放复盘周报" [ref=e518] [cursor=pointer]
+          - button "检查 OTT 素材合规风险" [ref=e521] [cursor=pointer]
+          - button "整理平台产品需求评审记录" [ref=e524] [cursor=pointer]
+        - generic [ref=e75]:
+          - generic [ref=e76]: 空间
+          - button "查看项目" [ref=e77] [cursor=pointer]
+        - button "欢网 · 平台产品组 03" [ref=e80] [cursor=pointer]:
+          - text: 欢网 · 平台产品组
+          - generic [ref=e82]: "03"
+      - generic [ref=e83]:
+        - button "消息中心" [ref=e84] [cursor=pointer]
+        - button "张 张伟 空间管理员" [ref=e88] [cursor=pointer]:
+          - generic [ref=e89]: 张
+          - generic [ref=e90]:
+            - strong [ref=e91]: 张伟
+            - generic [ref=e92]: 空间管理员
+    - generic [ref=e95]:
+      - banner [ref=e96]:
+        - button "打开导航" [ref=e608] [cursor=pointer]
+        - generic [ref=e97]:
+          - generic [ref=e98]: 欢网科技
+          - strong [ref=e101]: 任务对话
+        - generic [ref=e102]:
+          - button "搜索任务与资料" [ref=e105] [cursor=pointer]
+          - button "查看消息" [ref=e110] [cursor=pointer]
+      - main [ref=e115]:
+        - generic [ref=e527]:
+          - generic [ref=e528]:
+            - button "返回首页" [ref=e529] [cursor=pointer]
+            - generic [ref=e532]:
+              - heading "请根据本周渠道投放数据，生成一份可交付的运营周报" [level=1] [ref=e533]
+              - generic [ref=e534]: 欢网 Buddy · 刚刚
+            - button "收起结果" [ref=e537] [cursor=pointer]
+          - generic [ref=e540]:
+            - generic [ref=e541]:
+              - generic [ref=e542]:
+                - generic [ref=e543]: 今天 · 任务对话
+                - generic [ref=e544]:
+                  - generic [ref=e545]: 张
+                  - generic [ref=e546]:
+                    - generic [ref=e547]:
+                      - strong [ref=e548]: 张伟
+                      - text: 发起任务
+                    - generic [ref=e549]: 请根据本周渠道投放数据，生成一份可交付的运营周报，包含核心指标、异常分析和下周建议。
+                - generic [ref=e555]:
+                  - generic [ref=e556]:
+                    - strong [ref=e557]: 欢网 Buddy
+                    - text: 交互原型
+                  - paragraph [ref=e559]: 任务界面已创建。这是一份交互原型，任务执行、文件修改和 AI 回复均未连接真实服务。
+              - generic [ref=e562]:
+                - textbox "输入任务要求" [ref=e563]:
+                  - /placeholder: 继续输入任务要求，或对结果提出修改意见…
+                - generic [ref=e564]:
+                  - button "添加附件" [ref=e611] [cursor=pointer]
+                  - button "选择工作空间" [ref=e612] [cursor=pointer]
+                  - button "Plan" [ref=e575] [cursor=pointer]
+                  - button "切换模型" [ref=e613] [cursor=pointer]
+                  - button "发送任务" [ref=e587] [cursor=pointer]
+            - complementary "任务结果" [ref=e590]:
+              - generic [ref=e591]:
+                - generic [ref=e592]: 任务结果
+                - button "关闭结果面板" [ref=e593] [cursor=pointer]
+              - generic [ref=e596]:
+                - button "产物" [ref=e597] [cursor=pointer]
+                - button "全部文件" [ref=e598] [cursor=pointer]
+                - button "变更" [ref=e599] [cursor=pointer]
+                - button "预览" [ref=e600] [cursor=pointer]
+              - generic [ref=e601]:
+                - generic [ref=e602]:
+                  - text: 任务产物
+                  - strong [ref=e603]: 等待任务产物
+                  - paragraph [ref=e604]: 当前任务尚无产物，原型不会生成真实文件。
+                - generic [ref=e605]: 产物列表
+                - generic [ref=e606]: 暂无产物
+  - status

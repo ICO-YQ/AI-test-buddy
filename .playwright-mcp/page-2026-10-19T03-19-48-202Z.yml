@@ -1,0 +1,93 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - complementary "主导航" [ref=f1e3]:
+      - generic [ref=f1e4]:
+        - generic [ref=f1e7]:
+          - strong [ref=f1e8]: 欢网 Buddy
+          - generic [ref=f1e9]: AI WORKSPACE
+        - button "收起导航" [ref=f1e10] [cursor=pointer]
+      - generic [ref=f1e13]:
+        - button "新建任务 ⌘ K" [ref=f1e14] [cursor=pointer]:
+          - generic [ref=f1e17]: 新建任务
+          - generic [ref=f1e18]: ⌘ K
+        - generic [ref=f1e19]: 工作台
+        - navigation [ref=f1e20]:
+          - button "首页" [ref=f1e21] [cursor=pointer]
+          - button "助理 2" [ref=f1e25] [cursor=pointer]:
+            - generic [ref=f1e28]: 助理
+            - generic [ref=f1e29]: "2"
+          - button "项目" [ref=f1e30] [cursor=pointer]
+          - button "任务看板" [ref=f1e34] [cursor=pointer]
+          - button "AI 成员" [ref=f1e38] [cursor=pointer]
+          - button "专家 · 技能 · 连接器" [ref=f1e42] [cursor=pointer]
+          - button "定时任务" [ref=f1e46] [cursor=pointer]
+          - button "资料库" [ref=f1e50] [cursor=pointer]
+          - button "模型与安全" [ref=f1e54] [cursor=pointer]
+        - generic [ref=f1e59]:
+          - generic [ref=f1e60]: 最近任务
+          - button "新建任务" [ref=f1e61] [cursor=pointer]
+        - generic [ref=f1e64]:
+          - button "生成 9 月渠道投放复盘周报" [ref=f1e1530] [cursor=pointer]
+          - button "检查 OTT 素材合规风险" [ref=f1e1533] [cursor=pointer]
+          - button "整理平台产品需求评审记录" [ref=f1e1536] [cursor=pointer]
+        - generic [ref=f1e75]:
+          - generic [ref=f1e76]: 空间
+          - button "查看项目" [ref=f1e77] [cursor=pointer]
+        - button "欢网 · 平台产品组 03" [ref=f1e80] [cursor=pointer]:
+          - text: 欢网 · 平台产品组
+          - generic [ref=f1e82]: "03"
+      - generic [ref=f1e83]:
+        - button "消息中心" [ref=f1e84] [cursor=pointer]
+        - button "张 张伟 空间管理员" [ref=f1e88] [cursor=pointer]:
+          - generic [ref=f1e89]: 张
+          - generic [ref=f1e90]:
+            - strong [ref=f1e91]: 张伟
+            - generic [ref=f1e92]: 空间管理员
+    - generic [ref=f1e95]:
+      - banner [ref=f1e96]:
+        - generic [ref=f1e100]:
+          - generic [ref=f1e101]: 欢网科技
+          - strong [ref=f1e104]: 专家 · 技能 · 连接器
+        - generic [ref=f1e105]:
+          - generic [ref=f1e524]: 交互原型
+          - button "搜索任务与资料" [ref=f1e106] [cursor=pointer]:
+            - generic [ref=f1e526]: 搜索
+            - generic [ref=f1e527]: ⌘ F
+          - button "查看消息" [ref=f1e109] [cursor=pointer]
+          - generic "张伟" [ref=f1e528]: 张
+      - main [ref=f1e113]:
+        - generic [ref=f1e1539]:
+          - generic [ref=f1e1541]:
+            - generic [ref=f1e1542]: 能力中心
+            - heading "专家 · 技能 · 连接器" [level=1] [ref=f1e1545]
+            - paragraph [ref=f1e1546]: 按任务需要调用 AI 成员、可复用技能和授权外部服务。
+          - generic [ref=f1e1547]:
+            - generic [ref=f1e1548]:
+              - button "专家" [ref=f1e1549] [cursor=pointer]
+              - button "技能" [ref=f1e1550] [cursor=pointer]
+              - button "连接器" [ref=f1e1551] [cursor=pointer]
+            - searchbox [ref=f1e1555]
+          - generic [ref=f1e1556]:
+            - generic [ref=f1e1557]:
+              - generic [ref=f1e1558]: 已连接
+              - heading "企业微信" [level=3] [ref=f1e1563]
+              - paragraph [ref=f1e1564]: 接收任务通知与远程发送指令
+              - generic [ref=f1e1565]:
+                - generic [ref=f1e1566]: 已连接 · 欢网企业空间
+                - button "管理" [ref=f1e1567] [cursor=pointer]
+            - generic [ref=f1e1570]:
+              - generic [ref=f1e1571]: 已连接
+              - heading "团队知识库" [level=3] [ref=f1e1576]
+              - paragraph [ref=f1e1577]: 检索平台文档和运营规范
+              - generic [ref=f1e1578]:
+                - generic [ref=f1e1579]: 已连接 · 3 个知识空间
+                - button "管理" [ref=f1e1580] [cursor=pointer]
+            - generic [ref=f1e1583]:
+              - generic [ref=f1e1584]: 已连接
+              - heading "数据报表服务" [level=3] [ref=f1e1589]
+              - paragraph [ref=f1e1590]: 获取授权范围内的渠道报表
+              - generic [ref=f1e1591]:
+                - generic [ref=f1e1592]: 已连接 · 欢网企业空间
+                - button "管理" [ref=f1e1593] [cursor=pointer]
+  - status [ref=f1e414]:
+    - generic [ref=f1e1596]: 数据报表服务已连接（原型演示）

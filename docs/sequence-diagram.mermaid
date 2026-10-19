@@ -1,0 +1,119 @@
+%% ═══ 流程 1：创建任务 → 指派 AI → 执行 → 交付 → 人工验收 ═══
+sequenceDiagram
+  autonumber
+  actor U as 人类成员(张伟)
+  participant W as Web
+  participant T as TaskService
+  participant A as AuditService
+  participant P as PermissionService
+  participant E as AiExecutor(Mock)
+  participant R as Retriever(Mock)
+  participant S as Sandbox(Mock)
+  participant M as ModelGateway(Mock)
+
+  U->>W: 新建任务并选 AI 成员
+  W->>T: POST /api/tasks {title, assigneeId=A1, slaDueAt}
+  T->>P: 校验发起人→AI 指派合法性(effectiveScope)
+  P-->>T: 通过
+  T->>T: 生成 code=TSK-xxxx, traceId=tr-xxx
+  T->>A: audit(创建任务, actor=张伟, initiator=张伟, traceId)
+  A-->>T: ok（失败则整体抛错阻断）
+  T-->>W: 201 Task(status=todo)
+  Note over T,E: 状态 todo→in_progress（AI 认领）
+  T->>E: execute(task, agent A1)
+  E->>R: retrieve(query, acl=张伟可得域)
+  R-->>E: chunks（先 ACL 过滤再召回）
+  E->>S: run(skill=v1.4.0, declaredPermissions)
+  S->>S: 校验能力白名单（未声明即拒绝）
+  S-->>E: output(本地落盘 0)
+  E->>M: complete(scene=reasoning, prompt, context)
+  M-->>E: text + token(3820/1000) + cost
+  E->>A: audit(执行技能/调用模型, actor=Agent, initiator=张伟)
+  E-->>T: 交付物 ART-xxxx + 轨迹
+  T->>T: status in_progress→in_review
+  T->>A: audit(提交交付物)
+  T->>W: 通知（收件箱：待验收）
+  U->>W: 审阅交付物 → 验收通过
+  W->>T: POST /api/tasks/:id/accept {decision:accept}
+  T->>T: status in_review→done
+  T->>A: audit(验收通过)
+  T-->>W: 200 Task(done)
+  alt 驳回
+    U->>W: 打回并选原因(信息不足)
+    W->>T: POST accept {decision:reject, rejectReasonCode:info_insufficient}
+    T->>T: status in_review→in_progress（前向跳转）
+    T->>A: audit(驳回, reason)
+    T-->>W: 200 Task(in_progress)（原因进入 AI 上下文）
+  end
+
+%% ═══ 流程 2：技能从 Hub 远程加载 → 权限声明校验 → 沙箱执行 → 写审计 ═══
+sequenceDiagram
+  autonumber
+  actor U as 成员
+  participant W as Web
+  participant H as HubService
+  participant HC as HubClient(Mock)
+  participant V as StaticCheck
+  participant P as PermissionService
+  participant S as Sandbox(Mock)
+  participant A as AuditService
+
+  U->>W: 技能市场 → 调用社区技能
+  W->>H: POST /api/hub/skills/:id/load
+  H->>HC: fetchMetadata(skill)（仅元数据，不落盘）
+  HC-->>H: meta + signature
+  H->>H: 信任等级判定：community → 需 approved
+  alt 未审核通过
+    H-->>W: 403 TRUST_PENDING
+  else 签名失败
+    H-->>W: 403 SIGNATURE_INVALID + audit(告警)
+  else 通过
+    H->>V: staticScan(script)（危险 API 扫描）
+    V-->>H: {pass, issues}
+    H->>P: 校验权限声明 vs 实际调用
+    P-->>H: {pass, issues}
+    H-->>W: 200 {loaded:true, sandboxRequired:true}
+    W->>H: POST /api/skills/:id/execute {versionId, input}
+    H->>S: run(script, declaredPermissions, limits)
+    alt 越界调用
+      S-->>H: blocked(reason=permission)
+      H->>A: audit(skill_rejected, reason=权限越界)
+      H-->>W: 403 PERMISSION_UNDECLARED
+    else 正常
+      S-->>H: output(本地落盘 0)
+      H->>A: audit(执行技能, actor, initiator, sandboxId)
+      H-->>W: 200 result
+    end
+  end
+
+%% ═══ 流程 3：知识库问答：提问 → 权限过滤 → 检索 → 生成带引用答案 ═══
+sequenceDiagram
+  autonumber
+  actor U as 成员
+  participant W as Web
+  participant K as KbService
+  participant P as PermissionService
+  participant R as Retriever(Mock)
+  participant M as ModelGateway(Mock)
+  participant A as AuditService
+
+  U->>W: 提问（范围=投放规范 / 选中文本）
+  W->>K: POST /api/kb/query {query, scope, topK}
+  K->>P: resolveReadableSpaces(askerId)（ACL）
+  P-->>K: 可读空间集合
+  K->>R: search(query, allowedSpaces)（先过滤再召回）
+  R->>R: 关键词打分 + 重排 → topK chunks
+  R-->>K: chunks（含 space/doc/version/heading）
+  alt 无命中
+    K-->>W: {insufficient:true, citations:[]}
+    Note over W: 显式提示「未在知识库中找到依据」
+  else 有命中
+    K->>M: complete(scene=reasoning, prompt+chunks)
+    M-->>K: answer + citations(引用块)
+    K->>A: audit(rag_query, actor=张伟, citationCount)
+    K-->>W: {answer, citations:[{doc,heading,version}], traceId}
+    U->>W: 反馈（采纳/点踩/依据不足）
+    W->>K: POST /api/kb/feedback {queryId, feedback}
+    K->>K: 点踩→进入待优化队列
+    K-->>W: {ok:true}
+  end

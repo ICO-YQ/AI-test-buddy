@@ -1,0 +1,166 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - complementary "主导航" [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e7]:
+          - strong [ref=e8]: 欢网 Buddy
+          - generic [ref=e9]: AI WORKSPACE
+        - button "收起导航" [ref=e10] [cursor=pointer]
+      - generic [ref=e13]:
+        - button "新建任务 ⌘ K" [ref=e14] [cursor=pointer]:
+          - generic [ref=e17]: 新建任务
+          - generic [ref=e18]: ⌘ K
+        - generic [ref=e19]: 工作台
+        - navigation [ref=e20]:
+          - button "首页" [ref=e21] [cursor=pointer]
+          - button "助理 2" [ref=e25] [cursor=pointer]:
+            - generic [ref=e28]: 助理
+            - generic [ref=e29]: "2"
+          - button "项目" [ref=e30] [cursor=pointer]
+          - button "任务看板" [ref=e34] [cursor=pointer]
+          - button "AI 成员" [ref=e38] [cursor=pointer]
+          - button "专家 · 技能 · 连接器" [ref=e42] [cursor=pointer]
+          - button "定时任务" [ref=e46] [cursor=pointer]
+          - button "资料库" [ref=e50] [cursor=pointer]
+          - button "模型与安全" [ref=e54] [cursor=pointer]
+        - generic [ref=e59]:
+          - generic [ref=e60]: 最近任务
+          - button "新建任务" [ref=e61] [cursor=pointer]
+        - generic [ref=e64]:
+          - button "生成 9 月渠道投放复盘周报" [ref=e65] [cursor=pointer]
+          - button "检查 OTT 素材合规风险" [ref=e68] [cursor=pointer]
+          - button "整理平台产品需求评审记录" [ref=e71] [cursor=pointer]
+        - generic [ref=e75]:
+          - generic [ref=e76]: 空间
+          - button "查看项目" [ref=e77] [cursor=pointer]
+        - button "欢网 · 平台产品组 03" [ref=e80] [cursor=pointer]:
+          - text: 欢网 · 平台产品组
+          - generic [ref=e82]: "03"
+      - generic [ref=e83]:
+        - button "消息中心" [ref=e84] [cursor=pointer]
+        - button "张 张伟 空间管理员" [ref=e88] [cursor=pointer]:
+          - generic [ref=e89]: 张
+          - generic [ref=e90]:
+            - strong [ref=e91]: 张伟
+            - generic [ref=e92]: 空间管理员
+    - generic [ref=e95]:
+      - banner [ref=e96]:
+        - generic [ref=e97]:
+          - generic [ref=e98]: 欢网科技
+          - strong [ref=e101]: 工作台
+        - generic [ref=e102]:
+          - generic [ref=e103]: 交互原型
+          - button "搜索任务与资料" [ref=e105] [cursor=pointer]:
+            - generic [ref=e108]: 搜索
+            - generic [ref=e109]: ⌘ F
+          - button "查看消息" [ref=e110] [cursor=pointer]
+          - generic "张伟" [ref=e114]: 张
+      - main [ref=e115]:
+        - generic [ref=e116]:
+          - generic [ref=e118]:
+            - generic [ref=e119]: 欢迎回来，张伟
+            - heading [level=1] [ref=e122]:
+              - text: 把想法交给 AI，
+              - emphasis [ref=e123]: 把成果带回工作。
+            - paragraph [ref=e124]: 从一句话开始，让专家、技能和资料库为你的任务协同工作。
+          - generic [ref=e127]:
+            - generic [ref=e128]:
+              - button "智能任务" [ref=e129] [cursor=pointer]
+              - button "设计创意" [ref=e132] [cursor=pointer]
+              - button "数据分析" [ref=e135] [cursor=pointer]
+            - generic [ref=e138]:
+              - textbox "输入任务要求" [ref=e139]:
+                - /placeholder: 告诉欢网 Buddy 你想完成什么工作，例如：整理渠道数据并生成复盘报告…
+                - text: 请根据本周渠道投放数据，生成一份可交付的运营周报，包含核心指标、异常分析和下周建议。
+              - generic [ref=e140]:
+                - button "添加文件" [ref=e141] [cursor=pointer]
+                - button "欢网 · 平台产品组" [ref=e145] [cursor=pointer]
+                - button "Agent" [ref=e151] [cursor=pointer]
+                - button "Claude Sonnet 4.5" [ref=e157] [cursor=pointer]
+                - button "发送任务" [ref=e163] [cursor=pointer]
+          - generic [ref=e166]: 支持自然语言、文件附件、工作模式和模型选择 · 原型不执行真实任务
+          - generic [ref=e167]:
+            - generic [ref=e168]:
+              - generic [ref=e169]:
+                - heading "从一个想法开始" [level=2] [ref=e170]
+                - paragraph [ref=e171]: 选择场景，快速填入任务描述
+              - button "探索全部能力" [ref=e172] [cursor=pointer]
+            - generic [ref=e175]:
+              - button "全部" [ref=e176] [cursor=pointer]
+              - button "运营增长" [ref=e177] [cursor=pointer]
+              - button "数据分析" [ref=e178] [cursor=pointer]
+              - button "设计创意" [ref=e179] [cursor=pointer]
+            - generic [ref=e180]:
+              - button "生成投放周报 整理渠道数据，输出复盘和下周建议" [ref=e181] [cursor=pointer]:
+                - strong [ref=e185]: 生成投放周报
+                - generic [ref=e186]: 整理渠道数据，输出复盘和下周建议
+              - button "产出营销创意 从业务目标到文案和视觉方向" [ref=e189] [cursor=pointer]:
+                - strong [ref=e193]: 产出营销创意
+                - generic [ref=e194]: 从业务目标到文案和视觉方向
+              - button "行业调研分析 汇总信息源，形成结构化报告" [ref=e197] [cursor=pointer]:
+                - strong [ref=e201]: 行业调研分析
+                - generic [ref=e202]: 汇总信息源，形成结构化报告
+              - button "检查素材合规 让 AI 成员检查规范并列出风险项" [ref=e205] [cursor=pointer]:
+                - strong [ref=e209]: 检查素材合规
+                - generic [ref=e210]: 让 AI 成员检查规范并列出风险项
+          - generic [ref=e213]:
+            - generic [ref=e214]:
+              - generic [ref=e215]:
+                - generic [ref=e216]:
+                  - heading "最近任务" [level=2] [ref=e217]
+                  - paragraph [ref=e218]: 多个任务可以并行推进
+                - button "查看任务看板" [ref=e219] [cursor=pointer]
+              - generic [ref=e222]:
+                - button "生成 9 月渠道投放复盘周报 AI·数据分析师 · 今天 10:42 已完成" [ref=e223] [cursor=pointer]:
+                  - generic [ref=e227]:
+                    - strong [ref=e228]: 生成 9 月渠道投放复盘周报
+                    - generic [ref=e229]: AI·数据分析师 · 今天 10:42
+                  - generic [ref=e230]: 已完成
+                - button "检查 OTT 素材合规风险 AI·质量巡检 · 今天 09:18 待审核" [ref=e234] [cursor=pointer]:
+                  - generic [ref=e238]:
+                    - strong [ref=e239]: 检查 OTT 素材合规风险
+                    - generic [ref=e240]: AI·质量巡检 · 今天 09:18
+                  - generic [ref=e241]: 待审核
+                - button "整理平台产品需求评审记录 AI·投放文案 · 昨天 16:35 进行中" [ref=e245] [cursor=pointer]:
+                  - generic [ref=e249]:
+                    - strong [ref=e250]: 整理平台产品需求评审记录
+                    - generic [ref=e251]: AI·投放文案 · 昨天 16:35
+                  - generic [ref=e252]: 进行中
+            - generic [ref=e256]:
+              - generic [ref=e257]:
+                - generic [ref=e258]:
+                  - heading "最近产物" [level=2] [ref=e259]
+                  - paragraph [ref=e260]: 任务结果集中查看和复用
+                - button "查看全部" [ref=e261] [cursor=pointer]
+              - generic [ref=e264]:
+                - button "9 月渠道投放复盘.md 文档 · 今天 10:42" [ref=e265] [cursor=pointer]:
+                  - generic [ref=e269]:
+                    - strong [ref=e270]: 9 月渠道投放复盘.md
+                    - generic [ref=e271]: 文档 · 今天 10:42
+                - button "渠道 ROI 趋势.csv 数据表 · 今天 10:42" [ref=e274] [cursor=pointer]:
+                  - generic [ref=e278]:
+                    - strong [ref=e279]: 渠道 ROI 趋势.csv
+                    - generic [ref=e280]: 数据表 · 今天 10:42
+                - button "素材风险检查清单.md 文档 · 今天 09:18" [ref=e283] [cursor=pointer]:
+                  - generic [ref=e287]:
+                    - strong [ref=e288]: 素材风险检查清单.md
+                    - generic [ref=e289]: 文档 · 今天 09:18
+  - status
+  - dialog [ref=e294]:
+    - generic [ref=e295]:
+      - button "关闭" [active] [ref=e296] [cursor=pointer]
+      - generic [ref=e299]:
+        - heading "选择工作模式" [level=2] [ref=e300]
+        - paragraph [ref=e301]: Agent 直接执行；Plan 先展示方案；Ask 用于问答。
+        - button "Agent 默认执行模式" [ref=e302] [cursor=pointer]:
+          - generic [ref=e306]:
+            - strong [ref=e307]: Agent
+            - generic [ref=e308]: 默认执行模式
+        - button "Plan 先规划，确认后执行" [ref=e311] [cursor=pointer]:
+          - generic [ref=e315]:
+            - strong [ref=e316]: Plan
+            - generic [ref=e317]: 先规划，确认后执行
+        - button "Ask 仅问答，不执行操作" [ref=e320] [cursor=pointer]:
+          - generic [ref=e324]:
+            - strong [ref=e325]: Ask
+            - generic [ref=e326]: 仅问答，不执行操作

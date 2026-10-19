@@ -1,0 +1,133 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - complementary "主导航" [ref=f1e3]:
+      - generic [ref=f1e4]:
+        - generic [ref=f1e7]:
+          - strong [ref=f1e8]: 欢网 Buddy
+          - generic [ref=f1e9]: AI WORKSPACE
+        - button "收起导航" [ref=f1e10] [cursor=pointer]
+      - generic [ref=f1e13]:
+        - button "新建任务 ⌘ K" [ref=f1e14] [cursor=pointer]:
+          - generic [ref=f1e17]: 新建任务
+          - generic [ref=f1e18]: ⌘ K
+        - generic [ref=f1e19]: 工作台
+        - navigation [ref=f1e20]:
+          - button "首页" [ref=f1e21] [cursor=pointer]
+          - button "助理 2" [ref=f1e25] [cursor=pointer]:
+            - generic [ref=f1e28]: 助理
+            - generic [ref=f1e29]: "2"
+          - button "项目" [ref=f1e30] [cursor=pointer]
+          - button "任务看板" [ref=f1e34] [cursor=pointer]
+          - button "AI 成员" [ref=f1e38] [cursor=pointer]
+          - button "专家 · 技能 · 连接器" [ref=f1e42] [cursor=pointer]
+          - button "定时任务" [ref=f1e46] [cursor=pointer]
+          - button "资料库" [ref=f1e50] [cursor=pointer]
+          - button "模型与安全" [ref=f1e54] [cursor=pointer]
+        - generic [ref=f1e59]:
+          - generic [ref=f1e60]: 最近任务
+          - button "新建任务" [ref=f1e61] [cursor=pointer]
+        - generic [ref=f1e64]:
+          - button "生成 9 月渠道投放复盘周报" [ref=f1e1248] [cursor=pointer]
+          - button "检查 OTT 素材合规风险" [ref=f1e1251] [cursor=pointer]
+          - button "整理平台产品需求评审记录" [ref=f1e1254] [cursor=pointer]
+        - generic [ref=f1e75]:
+          - generic [ref=f1e76]: 空间
+          - button "查看项目" [ref=f1e77] [cursor=pointer]
+        - button "欢网 · 平台产品组 03" [ref=f1e80] [cursor=pointer]:
+          - text: 欢网 · 平台产品组
+          - generic [ref=f1e82]: "03"
+      - generic [ref=f1e83]:
+        - button "消息中心" [ref=f1e84] [cursor=pointer]
+        - button "张 张伟 空间管理员" [ref=f1e88] [cursor=pointer]:
+          - generic [ref=f1e89]: 张
+          - generic [ref=f1e90]:
+            - strong [ref=f1e91]: 张伟
+            - generic [ref=f1e92]: 空间管理员
+    - generic [ref=f1e95]:
+      - banner [ref=f1e96]:
+        - generic [ref=f1e100]:
+          - generic [ref=f1e101]: 欢网科技
+          - strong [ref=f1e104]: 任务对话
+        - generic [ref=f1e105]:
+          - generic [ref=f1e524]: 交互原型
+          - button "搜索任务与资料" [ref=f1e106] [cursor=pointer]:
+            - generic [ref=f1e526]: 搜索
+            - generic [ref=f1e527]: ⌘ F
+          - button "查看消息" [ref=f1e109] [cursor=pointer]
+          - generic "张伟" [ref=f1e528]: 张
+      - main [ref=f1e113]:
+        - generic [ref=f1e1257]:
+          - generic [ref=f1e1258]:
+            - button "返回首页" [ref=f1e1259] [cursor=pointer]
+            - generic [ref=f1e1262]:
+              - heading "生成 9 月渠道投放复盘周报" [level=1] [ref=f1e1263]
+              - generic [ref=f1e1264]: AI·数据分析师 · 今天 10:42
+            - generic [ref=f1e1265]: 已完成
+            - button "收起结果" [ref=f1e1267] [cursor=pointer]
+          - generic [ref=f1e1270]:
+            - generic [ref=f1e1271]:
+              - generic [ref=f1e1272]:
+                - generic [ref=f1e1273]: 今天 · 任务对话
+                - generic [ref=f1e1274]:
+                  - generic [ref=f1e1275]: 张
+                  - generic [ref=f1e1276]:
+                    - generic [ref=f1e1277]:
+                      - strong [ref=f1e1278]: 张伟
+                      - text: 发起任务
+                    - generic [ref=f1e1279]: 结合 9 月渠道 ROI 数据，生成一份投放复盘周报，标出异常渠道，并给出下月预算建议。
+                - generic [ref=f1e1285]:
+                  - generic [ref=f1e1286]:
+                    - strong [ref=f1e1287]: 欢网 Buddy
+                    - text: 示例执行记录
+                  - generic [ref=f1e1288]:
+                    - paragraph [ref=f1e1289]: 已根据授权资料整理任务。复盘摘要与数据文件已放在右侧产物区，可继续追问或查看变更。
+                    - generic [ref=f1e1290]:
+                      - generic [ref=f1e1291]:
+                        - text: 执行过程
+                        - generic [ref=f1e1294]: 3 个步骤
+                      - generic [ref=f1e1295]:
+                        - generic [ref=f1e1296]:
+                          - generic [ref=f1e1299]: 读取「渠道 ROI 数据」和投放运营规范
+                          - generic [ref=f1e1300]: 已完成
+                        - generic [ref=f1e1301]:
+                          - generic [ref=f1e1304]: 分析渠道表现与异常波动
+                          - generic [ref=f1e1305]: 已完成
+                        - generic [ref=f1e1306]:
+                          - generic [ref=f1e1309]: 生成复盘周报和预算建议
+                          - generic [ref=f1e1310]: 已完成
+                    - generic [ref=f1e1311]:
+                      - button "9月渠道投放复盘.md" [ref=f1e1312] [cursor=pointer]
+                      - button "渠道 ROI 趋势.csv" [ref=f1e1317] [cursor=pointer]
+              - generic [ref=f1e1324]:
+                - textbox "输入任务要求" [ref=f1e1325]:
+                  - /placeholder: 继续输入任务要求，或对结果提出修改意见…
+                - generic [ref=f1e1326]:
+                  - button "添加文件" [ref=f1e1327] [cursor=pointer]
+                  - button "欢网 · 平台产品组" [ref=f1e1331] [cursor=pointer]
+                  - button "Agent" [ref=f1e1337] [cursor=pointer]
+                  - button "Claude Sonnet 4.5" [ref=f1e1343] [cursor=pointer]
+                  - button "发送任务" [ref=f1e1349] [cursor=pointer]
+            - complementary "任务结果" [ref=f1e1352]:
+              - generic [ref=f1e1353]:
+                - generic [ref=f1e1354]: 任务结果
+                - button "关闭结果面板" [ref=f1e1355] [cursor=pointer]
+              - generic [ref=f1e1358]:
+                - button "产物" [ref=f1e1359] [cursor=pointer]
+                - button "全部文件" [ref=f1e1360] [cursor=pointer]
+                - button "变更" [ref=f1e1361] [cursor=pointer]
+                - button "预览" [ref=f1e1362] [cursor=pointer]
+              - generic [ref=f1e1363]:
+                - generic [ref=f1e1364]:
+                  - text: 任务产物
+                  - strong [ref=f1e1365]: 2 个可查看文件
+                  - paragraph [ref=f1e1366]: 点击文件查看示例预览
+                - generic [ref=f1e1367]: 产物列表
+                - button "9月渠道投放复盘.md 文档 · 24 KB" [ref=f1e1368] [cursor=pointer]:
+                  - generic [ref=f1e1371]:
+                    - strong [ref=f1e1372]: 9月渠道投放复盘.md
+                    - generic [ref=f1e1373]: 文档 · 24 KB
+                - button "渠道 ROI 趋势.csv 数据表 · 18 KB" [ref=f1e1376] [cursor=pointer]:
+                  - generic [ref=f1e1379]:
+                    - strong [ref=f1e1380]: 渠道 ROI 趋势.csv
+                    - generic [ref=f1e1381]: 数据表 · 18 KB
+  - status

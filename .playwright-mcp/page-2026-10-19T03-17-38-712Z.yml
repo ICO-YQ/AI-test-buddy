@@ -1,0 +1,114 @@
+- generic [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - complementary "主导航" [ref=f1e3]:
+      - generic [ref=f1e4]:
+        - generic [ref=f1e7]:
+          - strong [ref=f1e8]: 欢网 Buddy
+          - generic [ref=f1e9]: AI WORKSPACE
+        - button "收起导航" [ref=f1e10] [cursor=pointer]
+      - generic [ref=f1e13]:
+        - button "新建任务 ⌘ K" [ref=f1e14] [cursor=pointer]:
+          - generic [ref=f1e17]: 新建任务
+          - generic [ref=f1e18]: ⌘ K
+        - generic [ref=f1e19]: 工作台
+        - navigation [ref=f1e20]:
+          - button "首页" [ref=f1e21] [cursor=pointer]
+          - button "助理 2" [ref=f1e25] [cursor=pointer]:
+            - generic [ref=f1e28]: 助理
+            - generic [ref=f1e29]: "2"
+          - button "项目" [ref=f1e30] [cursor=pointer]
+          - button "任务看板" [ref=f1e34] [cursor=pointer]
+          - button "AI 成员" [ref=f1e38] [cursor=pointer]
+          - button "专家 · 技能 · 连接器" [ref=f1e42] [cursor=pointer]
+          - button "定时任务" [ref=f1e46] [cursor=pointer]
+          - button "资料库" [ref=f1e50] [cursor=pointer]
+          - button "模型与安全" [ref=f1e54] [cursor=pointer]
+        - generic [ref=f1e59]:
+          - generic [ref=f1e60]: 最近任务
+          - button "新建任务" [ref=f1e61] [cursor=pointer]
+        - generic [ref=f1e64]:
+          - button "生成 9 月渠道投放复盘周报" [ref=f1e282] [cursor=pointer]
+          - button "检查 OTT 素材合规风险" [ref=f1e285] [cursor=pointer]
+          - button "整理平台产品需求评审记录" [ref=f1e288] [cursor=pointer]
+        - generic [ref=f1e75]:
+          - generic [ref=f1e76]: 空间
+          - button "查看项目" [ref=f1e77] [cursor=pointer]
+        - button "欢网 · 平台产品组 03" [ref=f1e80] [cursor=pointer]:
+          - text: 欢网 · 平台产品组
+          - generic [ref=f1e82]: "03"
+      - generic [ref=f1e83]:
+        - button "消息中心" [ref=f1e84] [cursor=pointer]
+        - button "张 张伟 空间管理员" [ref=f1e88] [cursor=pointer]:
+          - generic [ref=f1e89]: 张
+          - generic [ref=f1e90]:
+            - strong [ref=f1e91]: 张伟
+            - generic [ref=f1e92]: 空间管理员
+    - generic [ref=f1e95]:
+      - banner [ref=f1e96]:
+        - button "打开导航" [ref=f1e97] [cursor=pointer]
+        - generic [ref=f1e100]:
+          - generic [ref=f1e101]: 欢网科技
+          - strong [ref=f1e104]: 定时任务
+        - generic [ref=f1e105]:
+          - button "搜索任务与资料" [ref=f1e106] [cursor=pointer]
+          - button "查看消息" [ref=f1e109] [cursor=pointer]
+      - main [ref=f1e113]:
+        - generic [ref=f1e291]:
+          - generic [ref=f1e292]:
+            - generic [ref=f1e293]:
+              - generic [ref=f1e294]: 自动化
+              - heading "定时任务" [level=1] [ref=f1e297]
+              - paragraph [ref=f1e298]: 让重复工作按计划运行，执行记录和产物统一回到任务中心。
+            - button "新建定时任务" [ref=f1e299] [cursor=pointer]
+          - generic [ref=f1e302]:
+            - strong [ref=f1e303]: 执行说明
+            - text: 原型中的开关和新增操作只改变当前页面展示，不会真正创建系统计划。
+          - generic [ref=f1e304]:
+            - generic [ref=f1e305]:
+              - generic [ref=f1e309]:
+                - strong [ref=f1e310]: 每周一渠道投放简报
+                - generic [ref=f1e311]: 每周一 09:00 · AI·数据分析师
+              - generic [ref=f1e312]: 已启用
+              - checkbox "切换 每周一渠道投放简报" [checked] [ref=f1e313]
+            - generic [ref=f1e314]:
+              - generic [ref=f1e318]:
+                - strong [ref=f1e319]: 每日素材风险巡检
+                - generic [ref=f1e320]: 每天 18:00 · AI·质量巡检
+              - generic [ref=f1e321]: 已启用
+              - checkbox "切换 每日素材风险巡检" [checked] [ref=f1e322]
+            - generic [ref=f1e323]:
+              - generic [ref=f1e327]:
+                - strong [ref=f1e328]: 月度知识库更新摘要
+                - generic [ref=f1e329]: 每月 1 日 10:00 · AI·投放文案
+              - generic [ref=f1e330]: 已暂停
+              - checkbox "切换 月度知识库更新摘要" [ref=f1e331]
+  - status
+  - dialog [ref=f1e332]:
+    - generic [ref=f1e333]:
+      - button "关闭" [active] [ref=f1e334] [cursor=pointer]
+      - generic [ref=f1e337]:
+        - heading "新建定时任务" [level=2] [ref=f1e338]
+        - paragraph [ref=f1e339]: 添加一条示例计划，便于评审自动化入口。
+        - generic [ref=f1e340]:
+          - generic [ref=f1e341]: 任务名称
+          - textbox "任务名称" [ref=f1e342]:
+            - /placeholder: 例如：每周渠道复盘
+        - generic [ref=f1e343]:
+          - generic [ref=f1e344]: 执行周期
+          - combobox "执行周期" [ref=f1e345]:
+            - option "每天 09:00" [selected]
+            - option "每周一 09:00"
+            - option "每月 1 日 10:00"
+        - generic [ref=f1e346]:
+          - generic [ref=f1e347]: 执行成员
+          - combobox "执行成员" [ref=f1e348]:
+            - option "AI·数据分析师" [selected]
+            - option "AI·质量巡检"
+            - option "AI·投放文案"
+        - generic [ref=f1e349]:
+          - generic [ref=f1e350]: 任务描述
+          - textbox "任务描述" [ref=f1e351]:
+            - /placeholder: 描述周期性工作内容
+        - generic [ref=f1e352]:
+          - button "取消" [ref=f1e353] [cursor=pointer]
+          - button "创建示例任务" [ref=f1e354] [cursor=pointer]
