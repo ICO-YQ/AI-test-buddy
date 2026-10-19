@@ -227,6 +227,18 @@ svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 1.75; fill:
 .feature-card p { font-size: 11px; color: #928b82; line-height: 1.55; margin: 0; flex: 1; }
 .feature-card-footer { display: flex; justify-content: space-between; align-items: center; color: #aaa197; font-size: 10.5px; }
 .feature-card-footer svg { width: 14px; height: 14px; }
+.capability-tabs { flex-wrap: wrap; }
+.capability-card { min-height: 245px; min-width: 0; }
+.capability-card h3, .capability-card p { overflow-wrap: anywhere; }
+.capability-card .feature-card-footer { flex-direction: column; align-items: flex-start; gap: 8px; margin-top: auto; width: 100%; }
+.capability-card .feature-card-footer > span { overflow-wrap: anywhere; }
+.capability-tags { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 5px; }
+.capability-tags span { display: inline-flex; align-items: center; gap: 4px; max-width: 100%; padding: 4px 7px; border-radius: 6px; background: #fff7ef; color: #806652; font-size: 10px; line-height: 1.35; overflow-wrap: anywhere; }
+.capability-tags svg { width: 12px; height: 12px; color: var(--orange); }
+.capability-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }
+.edit-capability-button { height: 27px; padding: 0 8px; font-size: 10.5px; }
+.edit-capability-button svg { width: 13px; height: 13px; }
+.capability-intro { margin-bottom: 15px; }
 .section-block { margin-top: 27px; }
 .section-block h2 { font-size: 14px; margin: 0 0 12px; }
 .list-surface { background: white; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
@@ -341,6 +353,23 @@ button.list-row:hover { background: #fffaf6; }
 .form-row input, .form-row select, .form-row textarea { width: 100%; border: 1px solid var(--line-strong); border-radius: 8px; padding: 9px 10px; font-size: 11px; color: var(--ink); background: white; }
 .form-row textarea { min-height: 80px; resize: vertical; }
 .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
+.editor-modal { width: min(860px, calc(100vw - 28px)); max-height: calc(100dvh - 36px); overflow-y: auto; }
+.editor-modal h2 { padding-right: 36px; }
+.editor-modal p { margin-bottom: 20px; }
+.cap-editor-grid { display: grid; grid-template-columns: minmax(0, 1fr) 270px; align-items: start; gap: 24px; }
+.cap-editor-fields, .cap-editor-preview { min-width: 0; }
+.cap-editor-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.cap-editor-switch { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 12px; border: 1px solid var(--line); border-radius: 9px; background: #fffaf6; }
+.cap-editor-switch span { display: grid; gap: 2px; }
+.cap-editor-switch strong { font-size: 11px; color: #5b534b; }
+.cap-editor-switch small, .cap-preview-note { font-size: 10px; line-height: 1.5; color: #9a8f84; }
+.cap-editor-preview { position: sticky; top: 4px; border: 1px solid #f0e3d5; border-radius: 12px; padding: 14px; background: #fffaf5; }
+.cap-editor-preview .panel-label { margin-bottom: 10px; }
+.cap-editor-preview .preview-card { min-height: 192px; }
+.cap-preview-detail { color: #a66740; font-size: 10.5px; }
+.cap-preview-note { margin-top: 10px; }
+.cap-editor-actions { position: sticky; bottom: -24px; padding: 13px 0 0; margin-top: 12px; border-top: 1px solid var(--line); background: white; }
+.required-mark { color: var(--orange); }
 .mobile-scrim { display: none; }
 
 @media (max-width: 1120px) {
@@ -358,6 +387,10 @@ button.list-row:hover { background: #fffaf6; }
   .mobile-menu { display: inline-grid; }
   .topbar { padding: 0 16px; }
   .result-panel { width: 265px; }
+}
+@media (max-width: 720px) {
+  .cap-editor-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .cap-editor-preview { position: static; }
 }
 @media (max-width: 640px) {
   .app-shell { min-height: 0; }
@@ -384,6 +417,9 @@ button.list-row:hover { background: #fffaf6; }
   .page-heading h1 { font-size: 22px; }
   .content-toolbar { align-items: flex-start; flex-direction: column; }
   .content-toolbar .search-field { width: 100%; }
+  .capability-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); width: 100%; }
+  .capability-tabs button { padding-inline: 5px; }
+  .capability-card { min-height: 210px; }
   .task-page-header { padding: 0 12px; height: 57px; gap: 7px; }
   .task-page-header .status-pill { display: none; }
   .task-conversation { padding: 18px 13px; }
@@ -391,4 +427,5 @@ button.list-row:hover { background: #fffaf6; }
   .result-panel { position: absolute; z-index: 10; right: 0; top: 52px; bottom: 0; width: min(340px, 92vw); box-shadow: -9px 0 24px #281c1126; }
   .task-page.result-closed .result-panel { display: none; }
   .modal { padding: 21px 16px; }
+  .cap-editor-actions { bottom: -21px; }
 }

@@ -32,6 +32,11 @@
     {name:'欢网 AI 平台建设',description:'产品研发、知识沉淀和交付验收',progress:86,items:'16 项任务 · 4 位成员',icon:'box',tone:'blue'},
   ];
   const extensions = {
+    agents: [
+      {name:'增长分析 Agent',description:'自动拆解投放数据，调用报表技能并输出增长建议',meta:'Claude Sonnet 4.5 · 2 项技能',icon:'chart',tone:'orange',model:'Claude Sonnet 4.5',expert:'AI·数据分析师',skills:'渠道 ROI 报表生成、周报摘要助手',connector:'数据报表服务',prompt:'请调用增长分析 Agent，分析本周渠道投放表现并给出预算建议。',enabled:true},
+      {name:'素材巡检 Agent',description:'按团队规范检查 OTT 素材，标记待人工复核的风险',meta:'Claude Sonnet 4.5 · 1 项技能',icon:'shield',tone:'green',model:'Claude Sonnet 4.5',expert:'AI·质量巡检',skills:'素材合规风险扫描',connector:'团队知识库',prompt:'请调用素材巡检 Agent，检查本次 OTT 投放素材。',enabled:true},
+      {name:'创意协作 Agent',description:'联动文案专家与知识库，生成多渠道创意草案',meta:'Claude Opus 4.5 · 1 项技能',icon:'spark',tone:'yellow',model:'Claude Opus 4.5',expert:'AI·投放文案',skills:'素材文案生成',connector:'团队知识库',prompt:'请调用创意协作 Agent，为智能大屏营销活动生成创意方案。',enabled:true},
+    ],
     experts: [
       {name:'AI·数据分析师',description:'擅长渠道数据、ROI 分析和报表生成',meta:'已加入平台产品组',icon:'chart',tone:'orange',prompt:'@AI·数据分析师 请帮我分析本周渠道 ROI 数据，输出关键发现。'},
       {name:'AI·投放文案',description:'活动创意、营销文案和素材优化',meta:'已加入平台产品组',icon:'spark',tone:'yellow',prompt:'@AI·投放文案 请为智能大屏活动写 3 版投放文案。'},
@@ -48,6 +53,25 @@
       {name:'数据报表服务',description:'获取授权范围内的渠道报表',meta:'待连接 · 需空间管理员授权',icon:'database',tone:'blue',connected:false},
     ],
   };
+  const extensionLabels = {agents:'Agent',experts:'专家',skills:'技能',connectors:'连接器'};
+  const extensionStorageKey = 'huanbuddy-prototype-capabilities-v1';
+  Object.entries(extensions).forEach(([kind,items]) => items.forEach((item,index) => { item.id = `${kind}-${index+1}`; }));
+  try {
+    const saved = JSON.parse(localStorage.getItem(extensionStorageKey) || 'null');
+    if (saved && typeof saved === 'object') {
+      Object.keys(extensionLabels).forEach(kind => {
+        if (Array.isArray(saved[kind])) {
+          const valid = saved[kind].filter(item => item && typeof item.id === 'string' && typeof item.name === 'string' && typeof item.description === 'string');
+          extensions[kind].splice(0, extensions[kind].length, ...valid);
+        }
+      });
+    }
+  } catch { /* 本地存储不可用时仍可在当前页面编辑。 */ }
+
+  function saveExtensions() {
+    try { localStorage.setItem(extensionStorageKey, JSON.stringify(extensions)); return true; }
+    catch { return false; }
+  }
   const library = [
     {name:'投放运营规范',type:'团队空间',icon:'book',tone:'orange',meta:'6 篇文档 · 今天更新',description:'素材规范、渠道投放与复核流程'},
     {name:'增长方法论',type:'团队空间',icon:'chart',tone:'yellow',meta:'4 篇文档 · 昨天更新',description:'转化分析、增长实验与复盘模板'},
@@ -60,7 +84,7 @@
     {id:'s3',title:'月度知识库更新摘要',when:'每月 1 日 10:00',agent:'AI·投放文案',enabled:false},
   ];
 
-  const state = {page:'home',activeTask:'task-1',category:'全部',extensionTab:'experts',libraryTab:'all',resultTab:'artifacts',resultOpen:true,draft:'',attachments:[],mode:'Agent',model:'Claude Sonnet 4.5',workspace:'欢网 · 平台产品组',filter:''};
+  const state = {page:'home',activeTask:'task-1',category:'全部',extensionTab:'agents',libraryTab:'all',resultTab:'artifacts',resultOpen:true,draft:'',attachments:[],mode:'Agent',model:'Claude Sonnet 4.5',workspace:'欢网 · 平台产品组',filter:'',editingCapability:null};
 
   function toast(message) {
     const region = $('#toastRegion');
@@ -90,7 +114,7 @@
   }
 
   function render() {
-    const titles = {home:'工作台',task:'任务对话',assistant:'助理',projects:'项目',board:'任务看板',members:'AI 成员',extensions:'专家 · 技能 · 连接器',schedule:'定时任务',library:'资料库',governance:'模型与安全'};
+    const titles = {home:'工作台',task:'任务对话',assistant:'助理',projects:'项目',board:'任务看板',members:'AI 成员',extensions:'Agent · 专家 · 技能 · 连接器',schedule:'定时任务',library:'资料库',governance:'模型与安全'};
     $('#breadcrumbCurrent').textContent = titles[state.page] || '工作台';
     $$('.nav-item').forEach((button) => button.classList.toggle('active', button.dataset.page === state.page));
     renderRecentTasks();
@@ -187,16 +211,30 @@
   }
 
   function membersView() {
-    return `<div class="content-page">${header('人机协作','AI 成员','为每种重复工作配置适合的专家，让任务有明确负责人。','<button class="outline-button" data-page="governance">'+icon('shield')+' 权限与审计</button>')}
-      <div class="info-banner"><strong>权限边界</strong>　AI 成员的有效权限以创建者授权为上限，任务行为同时记录 AI 主体与发起人。</div><div class="feature-grid">${extensions.experts.map(expert=>`<button class="feature-card" data-use-prompt="${esc(expert.prompt)}"><div class="feature-card-head"><span class="template-icon ${expert.tone==='orange'?'':expert.tone}">${icon(expert.icon)}</span><span class="status-pill done">可用</span></div><h3>${esc(expert.name)}</h3><p>${esc(expert.description)}</p><div class="feature-card-footer"><span>${esc(expert.meta)}</span>${icon('arrow')}</div></button>`).join('')}</div></div>`;
+    return `<div class="content-page">${header('人机协作','AI 成员','将模型、专家、技能和连接器组合成可复用的 Agent。','<button class="outline-button" data-action="open-agent-center">'+icon('box')+' 管理 Agent</button>')}
+      <div class="info-banner"><strong>权限边界</strong>　AI 成员的有效权限以创建者授权为上限，任务行为同时记录 AI 主体与发起人。</div><div class="feature-grid">${extensions.agents.map(agent=>capabilityCard(agent,'agents')).join('')}</div></div>`;
+  }
+
+  function capabilityCard(item,kind) {
+    const safeIcon = ['spark','chart','shield','message','book','database','box','folder','file','target','globe','team','zap','link'].includes(item.icon) ? item.icon : 'box';
+    const tone = ['yellow','blue','green'].includes(item.tone) ? item.tone : '';
+    const enabled = kind === 'connectors' ? !!item.connected : item.enabled !== false;
+    const status = kind === 'connectors' ? (enabled?'已连接':'待连接') : (enabled?'已启用':'已停用');
+    const detail = kind === 'agents' ? `<div class="capability-tags"><span>${icon('spark')} ${esc(item.model || '未选择模型')}</span><span>${icon('team')} ${esc(item.expert || '未指定专家')}</span><span>${icon('zap')} ${esc(item.skills || '未配置技能')}</span><span>${icon('link')} ${esc(item.connector || '未配置连接器')}</span></div>` : '';
+    const action = kind === 'connectors'
+      ? `<button class="text-link" data-connector-id="${esc(item.id)}">${enabled?'管理连接':'连接服务'} ${icon('arrow')}</button>`
+      : `<button class="text-link" data-use-prompt="${esc(item.prompt || `请使用${item.name}完成任务。`)}">立即使用 ${icon('arrow')}</button>`;
+    return `<div class="feature-card capability-card"><div class="feature-card-head"><span class="template-icon ${tone}">${icon(safeIcon)}</span><span class="status-pill ${enabled?'done':'paused'}">${status}</span></div><h3>${esc(item.name)}</h3><p>${esc(item.description)}</p>${detail}<div class="feature-card-footer"><span>${esc(item.meta || extensionLabels[kind])}</span><div class="capability-actions"><button class="outline-button edit-capability-button" data-edit-capability="${esc(item.id)}" data-capability-kind="${kind}">${icon('sliders')} 在线编辑</button>${action}</div></div></div>`;
   }
 
   function extensionsView() {
-    const tabs = [['experts','专家'],['skills','技能'],['connectors','连接器']];
-    const items = extensions[state.extensionTab].filter(item => `${item.name}${item.description}`.toLowerCase().includes(state.filter.toLowerCase()));
-    return `<div class="content-page">${header('能力中心','专家 · 技能 · 连接器','按任务需要调用 AI 成员、可复用技能和授权外部服务。')}
-      <div class="content-toolbar"><div class="segmented">${tabs.map(([key,label])=>`<button class="${state.extensionTab===key?'active':''}" data-extension-tab="${key}">${label}</button>`).join('')}</div><label class="search-field">${icon('search')}<input id="listSearch" type="search" placeholder="搜索${tabs.find(([key])=>key===state.extensionTab)[1]}" value="${esc(state.filter)}"></label></div>
-      <div class="feature-grid">${items.map(item=>`<div class="feature-card"><div class="feature-card-head"><span class="template-icon ${item.tone==='orange'?'':item.tone}">${icon(item.icon)}</span>${state.extensionTab==='connectors' ? `<span class="status-pill ${item.connected?'done':''}">${item.connected?'已连接':'待连接'}</span>`:'<span class="status-pill done">已启用</span>'}</div><h3>${esc(item.name)}</h3><p>${esc(item.description)}</p><div class="feature-card-footer"><span>${esc(item.meta)}</span><button class="text-link" ${state.extensionTab==='connectors'?`data-connector="${esc(item.name)}"`:`data-use-prompt="${esc(item.prompt)}"`}>${state.extensionTab==='connectors'?(item.connected?'管理':'连接'):'立即使用'} ${icon('arrow')}</button></div></div>`).join('') || '<div class="empty-state">没有匹配的内容</div>'}</div></div>`;
+    const tabs = Object.entries(extensionLabels);
+    const kind = state.extensionTab;
+    const items = extensions[kind].filter(item => `${item.name}${item.description}${item.meta || ''}`.toLowerCase().includes(state.filter.toLowerCase()));
+    return `<div class="content-page">${header('能力中心','Agent · 专家 · 技能 · 连接器','在线配置 Agent 的模型、专家、技能与连接器，并复用到任务中。',`<button class="primary-button" data-action="new-capability">${icon('plus')} 新建${extensionLabels[kind]}</button>`)}
+      <div class="content-toolbar"><div class="segmented capability-tabs">${tabs.map(([key,label])=>`<button class="${kind===key?'active':''}" data-extension-tab="${key}">${label}</button>`).join('')}</div><label class="search-field">${icon('search')}<input id="listSearch" type="search" placeholder="搜索${extensionLabels[kind]}" value="${esc(state.filter)}"></label></div>
+      <div class="info-banner capability-intro"><strong>${extensionLabels[kind]} 配置</strong>　点击卡片中的「在线编辑」修改内容，保存后即时更新；原型将修改保存在当前浏览器。</div>
+      <div class="feature-grid capability-grid">${items.map(item=>capabilityCard(item,kind)).join('') || '<div class="empty-state">没有匹配的内容</div>'}</div></div>`;
   }
 
   function scheduleView() {
@@ -219,6 +257,7 @@
   }
 
   function openModal(title, subtitle, content) {
+    $('#modal').classList.remove('editor-modal');
     $('#modalContent').innerHTML = `<h2>${title}</h2><p>${subtitle}</p>${content}`;
     $('#modal').showModal();
   }
@@ -226,6 +265,78 @@
   function closeModal() {
     const modal = $('#modal');
     if (modal.open) modal.close();
+    state.editingCapability = null;
+    modal.classList.remove('editor-modal');
+  }
+
+  function selectOptions(values,current) {
+    return [...new Set([...values,current].filter(Boolean))].map(value => `<option value="${esc(value)}" ${value===current?'selected':''}>${esc(value)}</option>`).join('');
+  }
+
+  function openCapabilityEditor(kind,id = null) {
+    if (!extensionLabels[kind]) return;
+    const item = id ? extensions[kind].find(value => value.id === id) : null;
+    if (id && !item) { toast('未找到要编辑的内容'); return; }
+    state.editingCapability = {kind,id};
+    const label = extensionLabels[kind];
+    const editing = !!item;
+    const current = item || {name:'',description:'',meta:'',icon:kind==='agents'?'spark':kind==='experts'?'team':kind==='skills'?'zap':'link',tone:'orange',enabled:true,connected:false,prompt:'',model:state.model,expert:extensions.experts[0]?.name || '',skills:'',connector:extensions.connectors[0]?.name || '',endpoint:'',scope:''};
+    const enabled = kind==='connectors' ? !!current.connected : current.enabled !== false;
+    const iconChoices = [['spark','灵感'],['chart','图表'],['shield','安全'],['team','成员'],['zap','技能'],['book','资料'],['link','连接'],['database','数据'],['box','应用']];
+    const previewIcon = iconChoices.some(([value]) => value === current.icon) ? current.icon : 'box';
+    const extra = kind==='agents' ? `
+      <div class="form-row"><label for="capModel">默认模型</label><select id="capModel">${selectOptions(['Claude Sonnet 4.5','Claude Opus 4.5','DeepSeek V3','腾讯混元'],current.model)}</select></div>
+      <div class="form-row"><label for="capExpert">关联专家</label><select id="capExpert">${selectOptions(extensions.experts.map(value=>value.name),current.expert)}</select></div>
+      <div class="form-row"><label for="capSkills">调用技能</label><input id="capSkills" maxlength="120" value="${esc(current.skills || '')}" placeholder="多个技能用顿号分隔"></div>
+      <div class="form-row"><label for="capConnector">连接器</label><select id="capConnector">${selectOptions(extensions.connectors.map(value=>value.name),current.connector)}</select></div>
+      <div class="form-row"><label for="capPrompt">Agent 指令</label><textarea id="capPrompt" placeholder="描述 Agent 如何处理任务">${esc(current.prompt || '')}</textarea></div>`
+      : kind==='connectors' ? `<div class="form-row"><label for="capEndpoint">服务地址（展示用）</label><input id="capEndpoint" type="url" value="${esc(current.endpoint || '')}" placeholder="https://example.com/api"></div><div class="form-row"><label for="capScope">授权范围</label><input id="capScope" value="${esc(current.scope || '')}" placeholder="例如：只读数据查询"></div>`
+      : `<div class="form-row"><label for="capPrompt">${kind==='skills'?'技能指令':'专家提示词'}</label><textarea id="capPrompt" placeholder="输入使用时的任务说明">${esc(current.prompt || '')}</textarea></div>`;
+    const content = `<div class="cap-editor-grid"><div class="cap-editor-fields">
+      <div class="form-row"><label for="capName">名称 <span class="required-mark">*</span></label><input id="capName" maxlength="40" value="${esc(current.name)}" placeholder="输入${label}名称" required></div>
+      <div class="form-row"><label for="capDescription">简介 <span class="required-mark">*</span></label><textarea id="capDescription" maxlength="240" placeholder="描述适用场景和能力" required>${esc(current.description)}</textarea></div>
+      <div class="form-row"><label for="capMeta">卡片补充信息</label><input id="capMeta" maxlength="80" value="${esc(current.meta || '')}" placeholder="例如：团队共享 · v1.0"></div>
+      <div class="cap-editor-pair"><div class="form-row"><label for="capIcon">图标</label><select id="capIcon">${iconChoices.map(([value,text])=>`<option value="${value}" ${current.icon===value?'selected':''}>${text}</option>`).join('')}</select></div><div class="form-row"><label for="capTone">强调色</label><select id="capTone">${[['orange','欢网橘'],['yellow','暖黄'],['blue','浅蓝'],['green','青绿']].map(([value,text])=>`<option value="${value}" ${current.tone===value?'selected':''}>${text}</option>`).join('')}</select></div></div>
+      ${extra}<label class="cap-editor-switch"><span><strong>${kind==='connectors'?'示例连接状态':'启用状态'}</strong><small>${kind==='connectors'?'仅展示状态，不进行真实授权':'停用后仍保留配置，可继续编辑'}</small></span><input id="capEnabled" class="toggle" type="checkbox" ${enabled?'checked':''}></label>
+      </div><aside class="cap-editor-preview"><div class="panel-label">实时预览</div><div class="feature-card capability-card preview-card"><div class="feature-card-head"><span class="template-icon" id="capPreviewIcon">${icon(previewIcon)}</span><span class="status-pill ${enabled?'done':'paused'}" id="capPreviewStatus">${enabled?(kind==='connectors'?'已连接':'已启用'):(kind==='connectors'?'待连接':'已停用')}</span></div><h3 id="capPreviewName">${esc(current.name || `${label}名称`)}</h3><p id="capPreviewDescription">${esc(current.description || '这里会同步展示正在编辑的简介。')}</p><div class="cap-preview-detail" id="capPreviewDetail">${kind==='agents'?esc(current.model || '未选择模型'):esc(current.meta || label)}</div></div><div class="cap-preview-note">保存后会立即更新卡片，并存入当前浏览器的本地存储。</div></aside></div>
+      <div class="modal-actions cap-editor-actions"><button type="button" class="outline-button" data-action="close-modal">取消</button><button type="button" class="primary-button" data-action="save-capability">${icon('check')} ${editing?'保存修改':'创建'+label}</button></div>`;
+    openModal(`${editing?'编辑':'新建'}${label}`,'直接在页面中修改配置，右侧会同步预览。',content);
+    $('#modal').classList.add('editor-modal');
+    $('#capName').focus();
+  }
+
+  function updateCapabilityPreview() {
+    if (!state.editingCapability || !$('#capPreviewName')) return;
+    const kind = state.editingCapability.kind;
+    $('#capPreviewName').textContent = $('#capName').value.trim() || `${extensionLabels[kind]}名称`;
+    $('#capPreviewDescription').textContent = $('#capDescription').value.trim() || '这里会同步展示正在编辑的简介。';
+    const enabled = $('#capEnabled').checked;
+    $('#capPreviewStatus').textContent = enabled ? (kind==='connectors'?'已连接':'已启用') : (kind==='connectors'?'待连接':'已停用');
+    $('#capPreviewStatus').className = `status-pill ${enabled?'done':'paused'}`;
+    $('#capPreviewIcon').className = `template-icon ${$('#capTone').value==='orange'?'':$('#capTone').value}`;
+    $('#capPreviewIcon').innerHTML = icon($('#capIcon').value);
+    $('#capPreviewDetail').textContent = kind==='agents' ? ($('#capModel').value || '未选择模型') : ($('#capMeta').value || extensionLabels[kind]);
+  }
+
+  function saveCapability() {
+    const editing = state.editingCapability;
+    if (!editing) return;
+    const {kind,id} = editing;
+    const name = $('#capName').value.trim();
+    const description = $('#capDescription').value.trim();
+    if (!name) { toast('请输入名称'); $('#capName').focus(); return; }
+    if (!description) { toast('请输入简介'); $('#capDescription').focus(); return; }
+    if (extensions[kind].some(item => item.id !== id && item.name === name)) { toast('该名称已存在'); $('#capName').focus(); return; }
+    const item = id ? extensions[kind].find(value=>value.id===id) : {id:`${kind}-${Date.now()}-${Math.random().toString(36).slice(2,7)}`};
+    if (!item) { toast('内容已不存在，请重新打开编辑器'); return; }
+    Object.assign(item,{name,description,meta:$('#capMeta').value.trim(),icon:$('#capIcon').value,tone:$('#capTone').value});
+    if (kind==='connectors') { item.connected=$('#capEnabled').checked; item.endpoint=$('#capEndpoint').value.trim(); item.scope=$('#capScope').value.trim(); }
+    else { item.enabled=$('#capEnabled').checked; item.prompt=$('#capPrompt').value.trim(); }
+    if (kind==='agents') Object.assign(item,{model:$('#capModel').value,expert:$('#capExpert').value,skills:$('#capSkills').value.trim(),connector:$('#capConnector').value});
+    if (!id) extensions[kind].unshift(item);
+    const persisted = saveExtensions();
+    closeModal(); state.filter=''; render();
+    toast(`${extensionLabels[kind]}已${id?'更新':'创建'}${persisted?'并保存到当前浏览器':'；本次修改仅在当前页面有效'}`);
   }
 
   function chooseModal(kind) {
@@ -281,6 +392,7 @@
     if (target.dataset.template) { const item=templates.find(value=>value.id===target.dataset.template); if(item){state.draft=item.prompt; $('#taskInput').value=state.draft; $('#taskInput').focus(); window.scrollTo(0,0); $('#mainContent').scrollTop=0; toast('已填入任务描述，可修改后发送');} return; }
     if (target.dataset.usePrompt) { state.draft=target.dataset.usePrompt; closeModal(); setPage('home'); $('#taskInput')?.focus(); toast('已填入任务描述，可修改后发送'); return; }
     if (target.dataset.extensionTab) { state.extensionTab=target.dataset.extensionTab; state.filter=''; render(); return; }
+    if (target.dataset.editCapability) { openCapabilityEditor(target.dataset.capabilityKind,target.dataset.editCapability); return; }
     if (target.dataset.libraryTab) { state.libraryTab=target.dataset.libraryTab; state.filter=''; render(); return; }
     if (target.dataset.resultTab) { state.resultTab=target.dataset.resultTab; render(); return; }
     if (target.dataset.file !== undefined) { state.previewFile=Number(target.dataset.file); state.resultTab='preview'; state.resultOpen=true; render(); return; }
@@ -288,10 +400,13 @@
     if (target.dataset.selectModel) { state.model=target.dataset.selectModel; closeModal(); render(); toast(`已选择 ${state.model}`); return; }
     if (target.dataset.selectMode) { state.mode=target.dataset.selectMode; closeModal(); render(); toast(`已切换为 ${state.mode} 模式`); return; }
     if (target.dataset.selectWorkspace) { state.workspace=target.dataset.selectWorkspace; closeModal(); render(); toast(`工作空间：${state.workspace}`); return; }
-    if (target.dataset.connector) { const connector=extensions.connectors.find(item=>item.name===target.dataset.connector); openModal(esc(target.dataset.connector),'连接器设置（原型演示）',`<div class="info-banner">正式产品会通过授权流程管理连接器。这里仅演示连接状态。</div><div class="list-row"><span class="list-row-icon">${icon('link')}</span><span class="list-row-main"><strong>${esc(connector.name)}</strong><small>${connector.connected?'已连接当前工作空间':'尚未连接'}</small></span><span class="status-pill ${connector.connected?'done':''}">${connector.connected?'已连接':'待连接'}</span></div><div class="modal-actions"><button type="button" class="outline-button" data-action="close-modal">关闭</button><button type="button" class="primary-button" data-action="toggle-connector" data-connector-name="${esc(connector.name)}">${connector.connected?'断开示例连接':'连接示例服务'}</button></div>`); return; }
+    if (target.dataset.connectorId) { const connector=extensions.connectors.find(item=>item.id===target.dataset.connectorId); if(!connector) return; openModal(esc(connector.name),'连接器设置（原型演示）',`<div class="info-banner">正式产品会通过授权流程管理连接器。这里仅演示连接状态。</div><div class="list-row"><span class="list-row-icon">${icon('link')}</span><span class="list-row-main"><strong>${esc(connector.name)}</strong><small>${connector.connected?'已连接当前工作空间':'尚未连接'}</small></span><span class="status-pill ${connector.connected?'done':''}">${connector.connected?'已连接':'待连接'}</span></div><div class="modal-actions"><button type="button" class="outline-button" data-action="close-modal">关闭</button><button type="button" class="primary-button" data-action="toggle-connector" data-toggle-connector-id="${esc(connector.id)}">${connector.connected?'断开示例连接':'连接示例服务'}</button></div>`); return; }
     if (target.dataset.libraryItem) { closeModal(); const item=library.find(value=>value.name===target.dataset.libraryItem); if(item) openModal(esc(item.name),esc(item.type),`<div class="preview-paper"><h3>${esc(item.name)}</h3><p>${esc(item.description)}</p><p>最近更新：${esc(item.meta)}</p><div class="preview-line"></div><div class="preview-line"></div><div class="preview-line short"></div></div><div class="modal-actions"><button type="button" class="outline-button" data-action="close-modal">关闭</button><button type="button" class="primary-button" data-use-prompt="请基于${esc(item.name)}回答我的问题。">用于新任务</button></div>`); return; }
     if (target.dataset.scheduleToggle) { const item=schedules.find(value=>value.id===target.dataset.scheduleToggle); if(item){item.enabled=target.checked; render(); toast(`${item.title}已${item.enabled?'启用':'暂停'}（原型演示）`);} return; }
     const action=target.dataset.action;
+    if (action==='open-agent-center') { state.extensionTab='agents'; setPage('extensions'); return; }
+    if (action==='new-capability') { openCapabilityEditor(state.extensionTab); return; }
+    if (action==='save-capability') { saveCapability(); return; }
     if (action==='new-task') { state.draft=''; state.attachments=[]; state.mode='Agent'; setPage('home'); $('#taskInput')?.focus(); return; }
     if (action==='attach') { $('#attachmentInput')?.click(); return; }
     if (action==='send') { createTask(); return; }
@@ -299,7 +414,7 @@
     if (['model','mode','workspace'].includes(action)) { chooseModal(action); return; }
     if (action==='toggle-results') { state.resultOpen=!state.resultOpen; render(); return; }
     if (action==='close-modal') { closeModal(); return; }
-    if (action==='toggle-connector') { const connector=extensions.connectors.find(item=>item.name===target.dataset.connectorName); if(connector){connector.connected=!connector.connected;connector.meta=connector.connected?'已连接 · 欢网企业空间':'待连接 · 需空间管理员授权';closeModal();render();toast(`${connector.name}已${connector.connected?'连接':'断开'}（原型演示）`);} return; }
+    if (action==='toggle-connector') { const connector=extensions.connectors.find(item=>item.id===target.dataset.toggleConnectorId); if(connector){connector.connected=!connector.connected;connector.meta=connector.connected?'已连接 · 欢网企业空间':'待连接 · 需空间管理员授权';const persisted=saveExtensions();closeModal();render();toast(`${connector.name}已${connector.connected?'连接':'断开'}${persisted?'并保存到当前浏览器':'（本次页面有效）'}`);} return; }
     if (action==='new-schedule') { openModal('新建定时任务','添加一条示例计划，便于评审自动化入口。',`<div class="form-row"><label for="scheduleName">任务名称</label><input id="scheduleName" placeholder="例如：每周渠道复盘" required></div><div class="form-row"><label for="scheduleFrequency">执行周期</label><select id="scheduleFrequency"><option>每天 09:00</option><option>每周一 09:00</option><option>每月 1 日 10:00</option></select></div><div class="form-row"><label for="scheduleAgent">执行成员</label><select id="scheduleAgent"><option>AI·数据分析师</option><option>AI·质量巡检</option><option>AI·投放文案</option></select></div><div class="form-row"><label for="schedulePrompt">任务描述</label><textarea id="schedulePrompt" placeholder="描述周期性工作内容"></textarea></div><div class="modal-actions"><button type="button" class="outline-button" data-action="close-modal">取消</button><button type="button" class="primary-button" data-action="save-schedule">创建示例任务</button></div>`); return; }
     if (action==='save-schedule') { const name=$('#scheduleName').value.trim(); if(!name){$('#scheduleName').focus();toast('请输入任务名称');return;} schedules.unshift({id:`s${Date.now()}`,title:name,when:$('#scheduleFrequency').value,agent:$('#scheduleAgent').value,enabled:true}); closeModal(); render(); toast('已添加定时任务（原型演示）'); return; }
     if (action==='new-project') { openModal('新建项目','项目创建在原型中仅作流程展示。',`<div class="form-row"><label for="projectName">项目名称</label><input id="projectName" placeholder="例如：新季度增长计划"></div><div class="form-row"><label for="projectDescription">项目说明</label><textarea id="projectDescription" placeholder="描述项目目标与协作范围"></textarea></div><div class="modal-actions"><button type="button" class="primary-button" data-action="save-project">创建示例项目</button></div>`); return; }
@@ -311,11 +426,13 @@
   });
 
   document.addEventListener('input', (event) => {
+    if (event.target.id?.startsWith('cap')) updateCapabilityPreview();
     if (event.target.id==='taskInput') state.draft=event.target.value;
     if (event.target.id==='listSearch') { state.filter=event.target.value; const caret=event.target.selectionStart; render(); $('#listSearch')?.focus(); $('#listSearch')?.setSelectionRange(caret,caret); }
     if (event.target.id==='globalSearch') updateGlobalSearch(event.target.value);
   });
   document.addEventListener('change', (event) => {
+    if (event.target.id?.startsWith('cap')) updateCapabilityPreview();
     if (event.target.id==='attachmentInput') { state.attachments.push(...[...event.target.files].map(file=>file.name)); render(); $('#taskInput')?.focus(); toast(`已添加 ${event.target.files.length} 个附件名称（原型演示）`); }
   });
   document.addEventListener('keydown', (event) => {
@@ -333,6 +450,8 @@
   $('#sidebarClose').addEventListener('click',closeSidebar);
   $('#mobileScrim').addEventListener('click',closeSidebar);
   $('#modal').addEventListener('click',(event)=>{ if(event.target===$('#modal')) closeModal(); });
+  $('#modal').addEventListener('submit',(event)=>event.preventDefault());
+  $('#modal').addEventListener('close',()=>{ state.editingCapability=null; $('#modal').classList.remove('editor-modal'); });
 
   function applyHash() {
     const hash=decodeURIComponent(location.hash.slice(1));
